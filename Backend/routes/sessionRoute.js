@@ -6,11 +6,12 @@ const {
     updateSession,
     deleteSession
 } = require('../controllers/sessionController');
+const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
-router.post('/createSession', createSession);
-router.get('/getAllSessions', getAllSessions);
-router.get('/getSessionById', getSessionById);
-router.put('/updateSession', updateSession);
-router.delete('/deleteSession', deleteSession);
+router.post('/createSession',authMiddleware, createSession);
+router.get('/getAllSessions',authMiddleware, getAllSessions);
+router.get('/getSessionById',authMiddleware, getSessionById);
+router.put('/updateSession',authMiddleware, updateSession);
+router.delete('/deleteSession',authMiddleware, deleteSession);
 module.exports = router;
