@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 
 const cors = require('cors');
 const connectDB = require('./config/db');
-const { connect } = require('mongoose');
 
 dotenv.config();
 const app = express();
@@ -12,6 +11,11 @@ app.use(cors());
 app.use(express.json());
 
 connectDB();
+
+const userRoute = require('./routes/usrRoute');
+app.use('/api/user', userRoute);
+const workoutRoute = require('./routes/workoutRoute');
+app.use('/api/workout', workoutRoute);
 
 app.get('/', (req, res) =>{
     res.send('Fitness Management System is running....');
