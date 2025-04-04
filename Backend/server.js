@@ -18,6 +18,8 @@ const workoutRoute = require('./routes/workoutRoute');
 app.use('/api/workout', workoutRoute);
 const nutritionRoute = require('./routes/nutritionRoute');
 app.use('/api/nutrition', nutritionRoute);
+const sessionRoute = require('./routes/sessionRoute');
+app.use('/api/session', sessionRoute);
 
 app.get('/', (req, res) =>{
     res.send('Fitness Management System is running....');

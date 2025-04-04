@@ -44,19 +44,19 @@ const userSchema = new mongoose.Schema({
     goal: {
         type: String,
         enum: ['weight loss', 'muscle gain', 'maintain weight'],
-        default: 'maintain weight'
+      
     },
      memberShip: {
         type: String,
         enum: ['basic', 'premium', 'pro'],
-        default: 'basic'
+        
     },
 
     //Trainer specific fields
     specialization: {
         type: String,
         enum: ['yoga', 'weightlifting', 'cardio', 'nutrition', 'rehabilitation'],
-        default: 'yoga',
+       
 
     },
     experience: {
