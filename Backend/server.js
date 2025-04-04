@@ -21,12 +21,12 @@ app.use('/api/nutrition', nutritionRoute);
 const sessionRoute = require('./routes/sessionRoute');
 app.use('/api/session', sessionRoute);
 
-app.get('/', (req, res) =>{
+app.get('/', (req, res) => {
     res.send('Fitness Management System is running....');
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>{
+app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })
 
