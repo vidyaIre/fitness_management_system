@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.post('/registerUser', registerUser);
 router.post('/loginUser', loginUser);
-router.get('/getUserAll',authMiddleware,roleMiddleware('admin'),getUserAll);
-router.get('/getUserById',authMiddleware, getUserById);
-router.put('/updateUser', authMiddleware, updateUser);
-router.delete('/deleteUser',authMiddleware, deleteUser);
+router.get('/getUserAll',authMiddleware,roleMiddleware("admin"), getUserAll);
+router.get('/getUserById',authMiddleware,roleMiddleware("admin", "trainer"), getUserById);
+router.put('/updateUser', authMiddleware,roleMiddleware("admin", "trainer"), updateUser);
+router.delete('/deleteUser',authMiddleware,roleMiddleware("admin"), deleteUser);
 
 module.exports = router;

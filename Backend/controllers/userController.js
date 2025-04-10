@@ -106,8 +106,11 @@ exports.loginUser = async (req, res) => {
 };
 // Get all users
 exports.getUserAll = async (req, res) => {
+
     try {
         const users = await User.find({ isDeleted: false });
+
+        //console.log("Userssssssss    ", users);
         if (!users) {
             return res.status(404).json({
                 success: false,

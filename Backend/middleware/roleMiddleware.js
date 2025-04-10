@@ -1,8 +1,12 @@
-const roleMiddleware = (...role) => {
-    return (req, res, next) => {
-        const userRole = req.user.role; // Assuming req.user is populated with user data
+const User = require('../models/userModel');
+const roleMiddleware = (...roles) => {
+    return async (req, res, next) => {
+        console.log("request body is ", req.body);
+        const userRole = req.user.role;
 
-        if (!role.includes(userRole)) {
+        console.log("User role is ", userRole)
+
+        if (!roles.includes(userRole)) {
             return res.status(403).json(
                 {
                     success: false,
@@ -14,6 +18,10 @@ const roleMiddleware = (...role) => {
         }
 
         next();
-    };
+    }
 };
-module.exports = roleMiddleware;
+
+
+
+
+        module.exports = roleMiddleware;

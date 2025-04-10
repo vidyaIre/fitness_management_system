@@ -1,4 +1,3 @@
-const e = require('express');
 const session = require('../models/sessionModel');
 const User = require('../models/userModel');
 const Workout = require('../models/workoutModel');

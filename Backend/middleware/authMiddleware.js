@@ -4,7 +4,7 @@ const User = require('../models/userModel');
 const authMiddleware= async (req, res, next) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
-        console.log(" token:", token);
+        //console.log(" token:", token);
         if (!token) {
             return res.status(401).json({
                 success: false,
@@ -14,7 +14,7 @@ const authMiddleware= async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        console.log("decoded:", decoded);
+        //console.log("decoded:", decoded);
 
         if (!decoded) {
             return res.status(401).json({
@@ -24,6 +24,7 @@ const authMiddleware= async (req, res, next) => {
             });
         }
         const user = await User.findById(decoded.id).select('-password');
+        req.user = user;
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -31,6 +32,7 @@ const authMiddleware= async (req, res, next) => {
                 message: 'Unauthorized, user not found'
             });
         }
+        //console.log(next);
         next();
     } catch (error) {   
         console.error('Error in authMiddleware:', error);
