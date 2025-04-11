@@ -17,8 +17,8 @@ export const loginUser = async (payload) => {
 export const getUser = async () => {
     const result = await axiosInstance.get("getUser")
     .catch((error) => {
-        console.log("Error fetching user datafrom api:", error);
-    })
+        console.log("Error fetching user datafrom api:", error)
+    });
     console.log("result is:", result);
     return result?.data;
 };

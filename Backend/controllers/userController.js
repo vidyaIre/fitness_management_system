@@ -205,6 +205,7 @@ exports.deleteUser = async (req, res) => {
     try {
         const { id } = req.body;
         const user = await User.findById(id);
+        console.log("user is:", user);
         if (!user) {
             return res.status(404).json({
                 success: false,
