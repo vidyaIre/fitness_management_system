@@ -20,6 +20,10 @@ const nutritionRoute = require('./routes/nutritionRoute');
 app.use('/api/nutrition', nutritionRoute);
 const sessionRoute = require('./routes/sessionRoute');
 app.use('/api/session', sessionRoute);
+const paymentRoute = require('./routes/paymentRoute');
+app.use('/api/payment', paymentRoute);
+const stripeRoute = require('./routes/stripeRoute');
+app.use('/api/stripe', stripeRoute);
 
 app.get('/', (req, res) => {
     res.send('Fitness Management System is running....');

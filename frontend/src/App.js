@@ -1,17 +1,30 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
+import React from "react";
+//import axios from "axios";
+import { RouterProvider } from "react-router-dom";
+import { ToastContainer, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import './App.css';
+import routes from "./routes/userRoute";
 const App = () => {
-  const [message, setMessage] = useState("");
+  return (
+    <>
+      <RouterProvider router={routes} />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Zoom}
+      />
+    </>
 
-  useEffect(() => {
-    axios.get("http://localhost:5000")
-      .then((response) => { setMessage(response.data); })
-      .catch((error) => {
-        console.error("There was an error fetching the message!", error);});
-  }, []);
-
-  return <h1>{message}</h1>
+  )
 }
 
 export default App;
