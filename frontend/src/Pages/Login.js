@@ -15,7 +15,7 @@ useEffect(() => {
     const token = localStorage.getItem("@token");
     const user = localStorage.getItem("@user");
     if (token && user) {
-        navigate("/");
+        navigate("/login");
         return;
     } else{
         localStorage.removeItem("@token");
