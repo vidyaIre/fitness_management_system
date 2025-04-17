@@ -2,7 +2,7 @@ import React from 'react';
 
 
 const dashboardRoute = () => {
-    const user = localStorage.getItem("@user");
+    const user = JSON.parse(localStorage.getItem("@user"));
     console.log("user from dashboard route:", user);
     if (!user) {
         return <Navigate to="/Pages/Home" />;
