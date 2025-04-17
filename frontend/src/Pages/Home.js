@@ -9,7 +9,7 @@ const Home = () => {
         <p>This is the home page of our application.</p>
         <p>Here you can find various features and functionalities.</p>
         <div>
-            <Link to="/login">Login</Link><br></br>
+            <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
         </div>
     </div>

@@ -15,10 +15,21 @@ export const loginUser = async (payload) => {
 
 };
 export const getUser = async () => {
-    const result = await axiosInstance.get("getUser")
+    const result = await axiosInstance.get("getUserAll")
     .catch((error) => {
         console.log("Error fetching user datafrom api:", error)
     });
     console.log("result is:", result);
     return result?.data;
 };
+export const registerUser = async (payload) => {
+    console.log("New  member is:", payload);
+    const result = await axiosInstance.post("registerUser", payload)
+    .catch((error) => {
+        console.error("Error registering user:", error);
+        throw error;
+    });
+    console.log("result is:", result);
+    return result?.data;
+
+}

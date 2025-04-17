@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import Login from "../Pages/Login";
 import Home from "../Pages/Home";
 import Users from "../Pages/Users";
+import Register from "../Pages/Register";
 
 const isAuthenticated = () => {
     const token = localStorage.getItem('@token');
@@ -30,6 +31,10 @@ const routes = createBrowserRouter([
     {
         path: "/Pages/Login",
         element: <Login />,
+    },
+    {
+        path: "/Pages/Register",
+        element: <Register />,
     },
     // protected routes
     {
