@@ -15,7 +15,8 @@ useEffect(() => {
     const token = localStorage.getItem("@token");
     const user = localStorage.getItem("@user");
     if (token && user) {
-        navigate("/login");
+        navigate("/Pages/Users");
+        toast.info("you are already logged in");
         return;
     } else{
         localStorage.removeItem("@token");
@@ -73,28 +74,79 @@ const handleSubmit = async (event) => {
 
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form>
-                <label htmlFor="email">Email:</label>
-                <input
-                 type="email" 
-                 value={email}
-                 placeholder='enter the Email'
-                 onChange={(e) => setEmail(e.target.value)}/>
+        // <div>
+        //     <h2>Login</h2>
+        //     <form>
+        //         <label htmlFor="email">Email:</label>
+        //         <input
+        //          type="email" 
+        //          value={email}
+        //          placeholder='enter the Email'
+        //          onChange={(e) => setEmail(e.target.value)}/>
 
                
-                <label htmlFor="password">Password:</label>
-                <input 
+        //         <label htmlFor="password">Password:</label>
+        //         <input 
+        //         type="password"
+        //         value={password}
+        //         onChange={(e) => setPassword(e.target.value)}
+        //          placeholder='enter the password'/>
+        //         <button type="submit"
+        //         onClick={handleSubmit}
+        //         >Login</button>    
+        //     </form>
+        // </div>
+
+        <div className="container mt-5">
+  <div className="row justify-content-center">
+    <div className="col-md-6">
+      <div className="card shadow-lg">
+        <div className="card-body">
+          <h2 className="text-center mb-4">Login</h2>
+          <form onSubmit={handleSubmit}>
+            
+            {/* Email Field */}
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Email</label>
+              <input
+                type="email"
+                id="email"
+                className="form-control"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            {/* Password Field */}
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">Password</label>
+              <input
                 type="password"
+                id="password"
+                className="form-control"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                 placeholder='enter the password'/>
-                <button type="submit"
-                onClick={handleSubmit}
-                >Login</button>    
-            </form>
+              />
+            </div>
+
+            {/* Submit Button */}
+            <div className="d-grid">
+              <button type="submit" className="btn btn-primary">Login</button>
+            </div>
+
+            {/* Register Link */}
+            <p className="text-center mt-3">
+              Don’t have an account? <a href="/Pages/Register" className="text-decoration-none">Register</a>
+            </p>
+          </form>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
     )
 }
 

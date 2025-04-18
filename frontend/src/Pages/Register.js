@@ -63,7 +63,8 @@ function Register() {
       } else {
         toast.error("Registration failed");
       }
-      navigate("/Pages/Login");
+      navigate("/register");
+      return;
 
     } catch (error) {
       console.log("Error during registration:", error);

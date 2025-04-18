@@ -3,6 +3,8 @@ import Login from "../Pages/Login";
 import Home from "../Pages/Home";
 import Users from "../Pages/Users";
 import Register from "../Pages/Register";
+import Dashboard from "../Pages/dashboard";
+
 
 const isAuthenticated = () => {
     const token = localStorage.getItem('@token');
@@ -24,7 +26,7 @@ const FallbackRoute = () => {
 const routes = createBrowserRouter([
     // root route
     {
-        path:"/",
+        path: "/",
         element: <Home />,
     },
     // authentication routes
@@ -50,6 +52,11 @@ const routes = createBrowserRouter([
     {
         path: "*",
         element: <FallbackRoute />,
+    },
+    {
+        path: "/Pages/dashboard",
+        element: <ProtectedRoute element={<Dashboard />} />,
+           
     }
 ]);
 
