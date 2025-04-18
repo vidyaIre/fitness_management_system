@@ -15,7 +15,8 @@ useEffect(() => {
     const token = localStorage.getItem("@token");
     const user = localStorage.getItem("@user");
     if (token && user) {
-        navigate("/Pages/Users");
+        //navigate("/Pages/Users");
+        navigate("/Pages/dashboardRouter");
         toast.info("you are already logged in");
         return;
     } else{
@@ -54,7 +55,8 @@ const handleSubmit = async (event) => {
                 toast.success("login successfully");
                 localStorage.setItem("@token", JSON.stringify(response?.token));
                 localStorage.setItem("@user", JSON.stringify(response?.user));
-                navigate("/Pages/Users");
+                //navigate("/Pages/Users");
+                navigate("/Pages/dashboardRouter");
             } else {
                 toast.info("login failed, please check your credentials");
                 navigate("/Pages/Login");

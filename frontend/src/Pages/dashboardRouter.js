@@ -5,11 +5,10 @@ import dashboardUser from './dashboardUser';
 import dashboardTrainer from './dashboardTrainer';
 import NotFound from './NotFound';
 
+const dashboardRouter = () => {
+    const user = JSON.parse(localStorage.getItem("@user"));
+    console.log("user is:", user);
 
-
-const Dashboard = () => {
-    //const user = JSON.parse(localStorage.getItem("@user"));
-    //console.log("user from dashboard route:", user);
     if (!user) {
         return <Home />;
     }
@@ -19,10 +18,10 @@ const Dashboard = () => {
         case "user":
             return <dashboardUser />;
         case "trainer":
-            return <dashboardTrainer />;
+            return <dashboardTrainers />;
         default:
             return <NotFound />;
     }
 }
 
-export default Dashboard;
+export default dashboardRouter;

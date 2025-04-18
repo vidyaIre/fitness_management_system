@@ -1,6 +1,6 @@
 import React from 'react';
 
-const dashboardTrainers = () => {
+const dashboardTrainer = () => {
   return (
     <div>
         <h1>Welcome to the Trainer Dashboard</h1>
@@ -19,4 +19,4 @@ const dashboardTrainers = () => {
   )
 }
 
-export default dashboardTrainers;
+export default dashboardTrainer;

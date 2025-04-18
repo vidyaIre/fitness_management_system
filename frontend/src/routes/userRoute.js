@@ -3,7 +3,7 @@ import Login from "../Pages/Login";
 import Home from "../Pages/Home";
 import Users from "../Pages/Users";
 import Register from "../Pages/Register";
-import Dashboard from "../Pages/dashboard";
+import DashboardRouter from "../Pages/dashboardRouter";
 
 
 const isAuthenticated = () => {
@@ -55,7 +55,7 @@ const routes = createBrowserRouter([
     },
     {
         path: "/Pages/dashboard",
-        element: <ProtectedRoute element={<Dashboard />} />,
+        element: <ProtectedRoute element={<DashboardRouter />} />,
            
     }
 ]);
