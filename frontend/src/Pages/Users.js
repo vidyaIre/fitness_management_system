@@ -26,8 +26,10 @@ const Users = () => {
             toast.error("Error fetching users");
         }
     }
+    
     useEffect(() => {
         fetchUsers();
+       
     }
         //eslint-disable-next-line
         , []);
@@ -50,17 +52,24 @@ const Users = () => {
                                 <th>Last Name</th>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Function</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
                                 usersValue && usersValue?.length > 0
                                     ? usersValue.map((users) => (
-                                        < tr key = {users?._id} >
+                                        < tr key={users?._id} >
                                             <td>{users?.firstName}</td>
                                             <td>{users?.lastName}</td>
                                             <td>{users?.email}</td>
                                             <td>{users?.role}</td>
+                                            <td>
+                                                <button className="btn btn-success">View</button>
+                                                <button className="btn btn-primary">Edit</button>
+                                                <button className="btn btn-danger">Delete</button>
+
+                                            </td>
                                         </tr>
 
                                     )) : <></>

@@ -4,11 +4,15 @@ import { RouterProvider } from "react-router-dom";
 import { ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './App.css';
-import routes from "./routes/userRoute";
+import userRoutes from "./routes/userRoutes";
+import workoutRoute from "./routes/workoutRoute";
+
+ 
 const App = () => {
   return (
     <>
-      <RouterProvider router={routes} />
+      <RouterProvider router={userRoutes} />
+      <RouterProvider router={workoutRoute}/>
       <ToastContainer
         position="top-right"
         autoClose={5000}

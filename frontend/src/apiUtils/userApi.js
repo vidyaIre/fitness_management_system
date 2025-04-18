@@ -4,7 +4,7 @@ export const loginUser = async (payload) => {
     const { email, password } = payload;
     console.log("payload is:", payload);
     if (email && password) {
-        const result = await axiosInstance.post("loginUser", payload)
+        const result = await axiosInstance.post("/user/loginUser", payload)
             .catch((error) => {
                 console.error("Error logging in user:", error);
                 throw error;
@@ -25,7 +25,7 @@ export const getUserAll = async () => {
             console.log("No token found in local storage.");
             throw new Error("No token found in local storage.");
         }
-        const result = await axiosInstance.get("getUserAll", {
+        const result = await axiosInstance.get("/user/getUserAll", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -51,7 +51,7 @@ export const getUserAll = async () => {
 };
 export const registerUser = async (payload) => {
     console.log("New  member is:", payload);
-    const result = await axiosInstance.post("registerUser", payload)
+    const result = await axiosInstance.post("/user/registerUser", payload)
         .catch((error) => {
             console.error("Error registering user:", error);
             throw error;

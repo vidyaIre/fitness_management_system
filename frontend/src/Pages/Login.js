@@ -5,6 +5,7 @@ import { loginUser } from '../apiUtils/userApi';
 import { useEffect } from 'react';
 import {toast} from "react-toastify";
 
+
 const Login = () => {
 
 const [email, setEmail] = useState("");
@@ -14,14 +15,17 @@ const navigate = useNavigate();
 useEffect(() => {
     const token = localStorage.getItem("@token");
     const user = localStorage.getItem("@user");
-    if (token && user) {
+    const role = localStorage.getItem("@role");
+    if (token && user && role) {
         //navigate("/Pages/Users");
-        navigate("/Pages/dashboardRouter");
+        navigate("Pages/Workouts");
+        //navigate("/Pages/dashboardRouter");
         toast.info("you are already logged in");
         return;
     } else{
         localStorage.removeItem("@token");
         localStorage.removeItem("@user");
+        localStorage.removeItem("@role");
         toast.info("session expired, please login again");
         navigate("/Pages/Login");
     }
@@ -55,8 +59,10 @@ const handleSubmit = async (event) => {
                 toast.success("login successfully");
                 localStorage.setItem("@token", JSON.stringify(response?.token));
                 localStorage.setItem("@user", JSON.stringify(response?.user));
+                localStorage.setItem("@role", JSON.stringify(response?.user?.role));
                 //navigate("/Pages/Users");
-                navigate("/Pages/dashboardRouter");
+                //navigate("/Pages/dashboardRouter");
+                navigate("Pages/Workouts");
             } else {
                 toast.info("login failed, please check your credentials");
                 navigate("/Pages/Login");

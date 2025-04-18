@@ -1,8 +1,5 @@
 import React from 'react';
 import Home from './Home';
-import dashboardAdmin from './dashboardAdmin';
-import dashboardUser from './dashboardUser';
-import dashboardTrainer from './dashboardTrainer';
 import NotFound from './NotFound';
 
 const dashboardRouter = () => {
