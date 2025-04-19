@@ -4,15 +4,13 @@ import { RouterProvider } from "react-router-dom";
 import { ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './App.css';
-import userRoutes from "./routes/userRoutes";
-import workoutRoute from "./routes/workoutRoute";
+import allRoutes from "./routes/allRoutes";
 
- 
-const App = () => {
+
+function App() {
   return (
     <>
-      <RouterProvider router={userRoutes} />
-      <RouterProvider router={workoutRoute}/>
+      <RouterProvider router={allRoutes} />
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -24,11 +22,10 @@ const App = () => {
         draggable
         pauseOnHover
         theme="dark"
-        transition={Zoom}
-      />
+        transition={Zoom} />
     </>
 
-  )
+  );
 }
 
 export default App;

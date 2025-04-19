@@ -2,13 +2,13 @@ import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { getWorkoutAll } from '../apiUtils/workoutApi'
+import { getAllWorkouts } from '../apiUtils/workoutApi'
 
 const Workouts = () => {
     const [workoutName, setWorkoutName] = useState([]);
     async function fetchWorkout() {
         try {
-            const workoutData = await getWorkoutAll();
+            const workoutData = await getAllWorkouts();
             console.log("workoutData is:", workoutData);
             const token = localStorage.getItem("@token");
             console.log("stored token is:", token);
@@ -41,9 +41,9 @@ const Workouts = () => {
                         <table className="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Workout Name</th>
+                                    <th>Workout Title</th>
                                     <th>Description</th>
-                                    <th>Exersise</th>
+                                    <th>Exercise</th>
                                     <th>sets</th>
                                     <th>reps</th>
                                     <th>Date</th>
@@ -52,14 +52,43 @@ const Workouts = () => {
                             <tbody>
                                 {
                                     workoutName && workoutName?.length > 0 ? (
+
                                         workoutName.map((workout) => (
                                             <tr key={workout._id}>
-                                                <td>{workout.name}</td>
+                                                <td>{workout.title}</td>
                                                 <td>{workout.description}</td>
-                                                <td>{workout.exersise}</td>
-                                                <td>{workout.sets}</td>
-                                                <td>{workout.reps}</td>
-                                                <td>{new Date(workout.date).toLocaleDateString()}</td>
+                                                <td>
+                                                    {
+                                                        workout.exercises && workout.exercises?.length > 0 ? (
+                                                            workout.exercises.map((exercises, index) => (
+                                                                <div key={index}>
+                                                                    <div>{exercises.name}</div>
+                                                                </div>
+                                                            ))
+                                                        ) : ("No exercises")
+                                                    }
+                                                </td>
+                                                <td>
+                                                    {
+                                                        workout.exercises && workout.exercises?.length > 0 ?
+                                                            workout.exercises.map((exercises, index) => (
+                                                                <div key={index}>{exercises.sets}</div>
+                                                            ))
+                                                            : "N/A"
+                                                    }
+                                                </td>
+                                                <td>
+                                                    {
+                                                        workout.exercises && workout.exercises?.length > 0 ?
+                                                            workout.exercises.map((exercises, index) => (
+                                                                <div key={index}>{exercises.reps}</div>
+                                                            ))
+                                                            : "N/A"
+
+                                                    }
+                                                </td>
+
+                                                <td>{new Date(workout.createdAt).toLocaleDateString()}</td>
                                             </tr>
                                         ))
                                     ) : (

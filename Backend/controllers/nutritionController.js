@@ -60,7 +60,7 @@ exports.createNutrition = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error creating nutrition:", error);
+        console.log("Error creating nutrition:", error);
         res.status(500).json({
             success: false,
             statusCode: 500,
@@ -81,7 +81,7 @@ exports.getAllNutrition = async (req, res) => {
             nutrition: nutritionList
         });
     } catch (error) {
-        console.error("Error retrieving nutrition:", error);
+        console.log("Error retrieving nutrition:", error);
         res.status(500).json({
             success: false,
             statusCode: 500,
@@ -121,7 +121,7 @@ exports.getNutritionByUserId = async (req, res) => {
             nutrition: nutritionList
         });
     } catch (error) {
-        console.error("Error retrieving nutrition:", error);
+        console.log("Error retrieving nutrition:", error);
         res.status(500).json({
             success: false,
             statusCode: 500,
@@ -159,7 +159,7 @@ exports.updateNutritionById = async (req, res) => {
             nutrition: updatedNutrition
         });
     } catch (error) {
-        console.error("Error updating nutrition:", error);
+        console.log("Error updating nutrition:", error);
         res.status(500).json({
             success: false,
             statusCode: 500,
@@ -188,7 +188,7 @@ exports.deleteNutritionById = async (req, res) => {
             message: "Nutrition deleted successfully"
         });
     } catch (error) {
-        console.error("Error deleting nutrition:", error);
+        console.log("Error deleting nutrition:", error);
         res.status(500).json({
             success: false,
             statusCode: 500,

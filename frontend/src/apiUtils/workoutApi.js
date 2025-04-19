@@ -1,23 +1,23 @@
 import axiosInstance from "../config/axiosConfig";
 
-export const getWorkoutAll = async () => {
+export const getAllWorkouts = async () => {
     try {
         let token = localStorage.getItem("@token");
-        console.log("stored token is:", token);
+        //console.log("stored token is:", token);
         if(token){
             token = token.slice(1, -1);
-            console.log("token is:", token); 
+           // console.log("token is:", token); 
         } else{
             console.log("No token found in local storage.");
             throw new Error("No token found in local storage.");
         }
-        const result = await axiosInstance.get("/workout/getWorkoutAll", {
+        const results = await axiosInstance.get("/workout/getAllWorkouts", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log("result from getWorkoutAll:", result);
-        return result?.data;
+        console.log("result from getWorkoutAll:", results);
+        return results?.data;
     }
     catch (error) {
        if (error.response) {
@@ -27,7 +27,7 @@ export const getWorkoutAll = async () => {
             headers: error.response.headers
         });
     }else if (error.request) {
-        console.error("No response received from API:", error.request);
+        console.error("No request received from API:", error.request);
     }
     else {
         console.error("Error setting up request to API:", error.message);
