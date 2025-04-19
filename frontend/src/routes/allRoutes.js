@@ -4,12 +4,12 @@ import Home from "../Pages/Home";
 import Login from '../Pages/Login';
 import Register from '../Pages/Register';
 import { Navigate } from 'react-router-dom';
+import CreateWorkout from '../Pages/CreateWorkout';
 import Users from '../Pages/Users';
 import NotFound from '../Pages/NotFound';
 import Workouts from '../Pages/Workouts';
 import Nutrition from '../Pages/Nutrition';
 import Sessions from '../Pages/Sessions';
-import CreateWorkout from '../Pages/CreateWorkout';
 
 const isAuth = () => {
 const token = localStorage.getItem('@token');

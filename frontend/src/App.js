@@ -5,11 +5,13 @@ import { ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './App.css';
 import allRoutes from "./routes/allRoutes";
+import Header from './layouts/Header';
+import Footer from "./layouts/Footer";
 
 
 function App() {
   return (
-    <>
+    <><Header/>
       <RouterProvider router={allRoutes} />
       <ToastContainer
         position="top-right"
@@ -23,6 +25,7 @@ function App() {
         pauseOnHover
         theme="dark"
         transition={Zoom} />
+        <Footer/>
     </>
 
   );
