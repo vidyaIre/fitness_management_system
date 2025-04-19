@@ -9,6 +9,7 @@ import NotFound from '../Pages/NotFound';
 import Workouts from '../Pages/Workouts';
 import Nutrition from '../Pages/Nutrition';
 import Sessions from '../Pages/Sessions';
+import CreateWorkout from '../Pages/CreateWorkout';
 
 const isAuth = () => {
 const token = localStorage.getItem('@token');
@@ -49,6 +50,10 @@ const userRoutes = createBrowserRouter([
      {
         path:"/Pages/Sessions",
         element:<ProtecterRoute element={<Sessions/>}/>
+    },
+    {
+        path:"/Pages/CreateWorkout",
+        element:<ProtecterRoute element={<CreateWorkout/>}/>
     },
     {
          path: "*",
