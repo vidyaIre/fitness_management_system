@@ -4,7 +4,8 @@ import Home from "../Pages/Home";
 import Login from '../Pages/Login';
 import Register from '../Pages/Register';
 import { Navigate } from 'react-router-dom';
-import CreateWorkout from '../Pages/CreateWorkout';
+import CreateWorkout from '../Pages/createWorkout';
+import CreateNutrition from '../Pages/CreateNutrition';
 import Users from '../Pages/Users';
 import NotFound from '../Pages/NotFound';
 import Workouts from '../Pages/Workouts';
@@ -54,6 +55,10 @@ const userRoutes = createBrowserRouter([
     {
         path:"/Pages/CreateWorkout",
         element:<ProtecterRoute element={<CreateWorkout/>}/>
+    }, 
+    {
+        path:"/Pages/CreateNutrition",
+        element:<ProtecterRoute element={<CreateNutrition/>}/>
     },
     {
          path: "*",

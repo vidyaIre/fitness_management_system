@@ -46,6 +46,9 @@ const authMiddleware = async (req, res, next) => {
         next();
     } catch (error) {
         console.error('Error in authMiddleware:', error);
+        if (error.code === 'ECONNRESET') {
+            return res.status(503).json({ message: "Connection reset. Please try again." });
+          }
         return res.status(500).json({
             success: false,
             message: 'Internal server error'

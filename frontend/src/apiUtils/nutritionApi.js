@@ -35,3 +35,14 @@ export const getAllNutrition = async() => {
         throw error;
     }
 }
+export const createNutrition = async (payload) => {
+    console.log("New Nutrition is:", payload);
+    const result = await axiosInstance.post("/nutrition/createNutrition", payload)
+        .catch((error) => {
+            console.log("Error creating Nutrition:", error);
+            throw error;
+        });
+    console.log("result is:", result);
+    return result?.data;
+
+}

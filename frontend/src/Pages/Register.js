@@ -51,7 +51,7 @@ function Register() {
     }
 
     try {
-      const { data } = await axiosInstance.post("registerUser", formData);
+      const { data } = await axiosInstance.post("user/registerUser", formData);
       console.log("data from register is:", data);
       localStorage.setItem("@token", JSON.stringify(data?.token));
       localStorage.setItem("@user", JSON.stringify(data?.user));
@@ -63,7 +63,7 @@ function Register() {
       } else {
         toast.error("Registration failed");
       }
-      navigate("/register");
+      navigate("/Pages/Users");
       return;
 
     } catch (error) {
@@ -215,7 +215,7 @@ function Register() {
                 <button type="submit" className="btn btn-primary w-100" onClick={handleSubmit}>Register</button>
 
                 <p className="mt-3 text-center">
-                  Already have an account? <a href="/login">Login</a>
+                  Already have an account? <a href="/Pages/Login">Login</a>
                 </p>
               </form>
             </div>

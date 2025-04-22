@@ -51,7 +51,7 @@ const Sessions = () => {
                 <table className="table table-bordered table-striped">
                   <thead className="table-dark">
                     <tr>
-                      <th scope="col">#</th>
+                      <th scope="col"></th>
                       <th scope="col">Exercise Name</th>
                       <th scope="col">Sets</th>
                       <th scope="col">Reps</th>

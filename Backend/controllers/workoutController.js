@@ -3,16 +3,19 @@ const User = require('../models/userModel');
 
 // Create a new workout
 exports.createWorkout = async (req, res) => {
-    const { title, description, exercises } = req.body;
+    const { user, title, description, exercises } = req.body;
+    console.log("data is:", req.body);
     //console.log("title:", req.body.title);
     //console.log("description:", req.body.description);
     //console.log("exercises:",req.body.exercises);
-    const userId = req.body.userId;
+    //const userId = req.body.userId;
     //console.log("userId:", userId);
 
     try {
+        const data = await User.findOne({ firstName: user });
+        console.log("user is  ", data);
         const newWorkout = new workout({
-            UserId: userId,
+            user: data._id,
             title,
             description,
             exercises
@@ -38,7 +41,7 @@ exports.createWorkout = async (req, res) => {
 // Get all workouts
 exports.getAllWorkouts = async (req, res) => {
     try {
-        const workouts = await workout.find({ isActive: true, isDeleted: false }).populate('UserId', 'name email');
+        const workouts = await workout.find({ isActive: true, isDeleted: false }).populate('user', 'name email');
         res.status(200).json({
             success: true,
             statusCode: 200,
@@ -61,7 +64,7 @@ exports.getWorkoutById = async (req, res) => {
     console.log("id:", id);
 
     try {
-        const workoutData = await workout.findById(id).populate('UserId', 'name email');
+        const workoutData = await workout.findById(id).populate('user', 'name email');
 
         if (!workoutData) {
             return res.status(404).json({
@@ -88,7 +91,7 @@ exports.getWorkoutById = async (req, res) => {
 };
 // Update a workout
 exports.updateWorkout = async (req, res) => {
-    const { id, title, description, exercises } = req.body;
+    const {id, title, description, exercises } = req.body;
     console.log("id:", id);
     console.log("title:", title);
     console.log("description:", description);
@@ -96,7 +99,7 @@ exports.updateWorkout = async (req, res) => {
 
     try {
         const updatedWorkout = await workout.findByIdAndUpdate(
-            id,
+           id,
             { title, description, exercises },
             { new: true }
         );
