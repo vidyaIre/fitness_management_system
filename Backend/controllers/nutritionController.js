@@ -1,33 +1,52 @@
-const e = require('express');
 const nutrition = require('../models/nutritionModel');
 const User = require('../models/userModel');
 
 // Create a new nutrition 
 exports.createNutrition = async (req, res) => {
     const { assignedTo, meals, food_items, total_calories, createdBy } = req.body;
-    console.log("assignedTo:", req.body.assignedTo);
-
-    const userId = req.body.assignedTo;
-    console.log("userId:", userId);
-    req.body.meals.forEach((meal) => {
-        console.log("meal_time:", meal.meal_time);
-        meal.food_items.forEach((food_item) => {
-            console.log("food_name:", food_item.food_name);
-            console.log("quantity:", food_item.quantity);
-            console.log("calories:", food_item.calories);
-            console.log("protein:", food_item.protein);
-            console.log("carbs:", food_item.carbs);
-            console.log("fats:", food_item.fats);
-        });
-        console.log("total_calories:", meal.total_calories);
-        console.log("createdBy:", meal.createdBy);
-    }
-    )
+    console.log("data is :",req.body);
+    // const userName = await User.findOne({ firstName: user });
+    // const trainerName = await User.findOne({ firstName: trainer });
+    // console.log("assignedTo:",userName );
+    // console.log("createdBy:", trainerName);
+    // req.body.meals.forEach((meal) => {
+    //     console.log("meal_time:", meal.meal_time);
+    //     meal.food_items.forEach((food_item) => {
+    //         console.log("food_name:", food_item.food_name);
+    //         console.log("quantity:", food_item.quantity);
+    //         console.log("calories:", food_item.calories);
+    //         console.log("protein:", food_item.protein);
+    //         console.log("carbs:", food_item.carbs);
+    //         console.log("fats:", food_item.fats);
+    //     });
+    //     console.log("total_calories:", total_calories);
+    // }
+    // )
+   
 
 
     try {
+        //const data1 = await User.findOne({ firstName: assignedTo });
+        const data1 = await User.findById(assignedTo);
+        console.log("user is:", data1);
+        if (!data1) {
+            return res.status(404).json({
+                success: false,
+                message: `User with name "${assignedTo}" not found`
+            });
+        }
+
+       // const data2 = await User.findOne({ firstName: createdBy });
+       const data2 = await User.findById(createdBy);
+        console.log("trainer is:",data2);
+        if (!data2) {
+            return res.status(404).json({
+                success: false,
+                message: `Trainer with name "${createdBy}" not found`
+            });
+        }
         const newNutrition = new nutrition({
-            assignedTo: userId,
+            assignedTo: data1._id,
             meals: meals.map(meal => ({
                 meal_time: meal.meal_time,
 
@@ -42,7 +61,7 @@ exports.createNutrition = async (req, res) => {
             })),
 
             total_calories: total_calories,
-            createdBy: createdBy
+           createdBy: data2._id
             // meals,
             // food_items,
             // total_calories,
@@ -71,8 +90,9 @@ exports.createNutrition = async (req, res) => {
 };
 // Get all nutrition
 exports.getAllNutrition = async (req, res) => {
+    console.log("data form get all nutrition:", req.body);
     try {
-        const nutritionList = await nutrition.find().populate('assignedTo', 'name email').populate('createdBy', 'name email');
+        const nutritionList = await nutrition.find().populate('assignedTo', 'firstName email').populate('createdBy', 'firstName email');
         res.status(200).json({
             success: true,
             statusCode: 200,

@@ -41,7 +41,8 @@ exports.createWorkout = async (req, res) => {
 // Get all workouts
 exports.getAllWorkouts = async (req, res) => {
     try {
-        const workouts = await workout.find({ isActive: true, isDeleted: false }).populate('user', 'name email');
+        const workouts = await workout.find({ isActive: true, isDeleted: false }).populate('user', 'firstName');
+        //console.log("workout is:", workouts);
         res.status(200).json({
             success: true,
             statusCode: 200,

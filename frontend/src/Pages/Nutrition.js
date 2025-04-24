@@ -40,8 +40,8 @@ const Nutrition = () => {
         <div key={nutrition._id} className="card mb-4 shadow-sm">
           <div className="card-header bg-primary text-white">
             <div className="d-flex justify-content-between">
-              <span><strong>Assigned To:</strong> {nutrition.assignedTo?._id || "N/A"}</span>
-              <span><strong>Created By:</strong> {nutrition.createdBy?._id || "N/A"}</span>
+              <span><strong>Assigned To:</strong> {nutrition.assignedTo?.firstName|| "N/A"}</span>
+              <span><strong>Created By:</strong> {nutrition.createdBy?.firstName || "N/A"}</span>
             </div>
           </div>
           <div className="card-body">

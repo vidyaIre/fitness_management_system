@@ -41,6 +41,7 @@ const Workouts = () => {
                         <table className="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>User:</th>
                                     <th>Workout Title</th>
                                     <th>Description</th>
                                     <th>Exercise</th>
@@ -50,11 +51,13 @@ const Workouts = () => {
                                 </tr>
                             </thead>
                             <tbody>
+                                
                                 {
-                                    workoutName && workoutName?.length > 0 ? (
+                                  workoutName && workoutName?.length > 0 ? (
 
                                         workoutName.map((workout) => (
                                             <tr key={workout._id}>
+                                                <td>{workout?.UserId?.firstName || workout?.user?.firstName|| "N/A"}</td>
                                                 <td>{workout.title}</td>
                                                 <td>{workout.description}</td>
                                                 <td>

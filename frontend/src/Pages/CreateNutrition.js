@@ -1,11 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../config/axiosConfig';
 import { toast } from 'react-toastify';
+import { getUserAll } from '../apiUtils/userApi';
 
 const CreateNutrition = () => {
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const  data  = await getUserAll();
+                console.log("Fetched users data:", data); // Log full response
+                if (data?.success && data?.users) {
+                    // Ensure 'users' is a valid array
+                    const allUsers = data.users;
+                    console.log("All users fetched:", allUsers); // Log all users
+    
+                    // Filter users by role
+                    const filteredUsers = allUsers.filter(user => user.role === 'user');
+                    const filteredTrainers = allUsers.filter(user => user.role === 'trainer');
+    
+                    setUsers(filteredUsers);
+                    setTrainers(filteredTrainers);
+                } else {
+                    toast.error("Failed to fetch users");
+                    console.error("Invalid data structure:", data); // Log if structure is not as expected
+                }
+            } catch (err) {
+                toast.error("Error fetching users: " + err.message);
+                console.error("Error fetching users:", err); // Log error in the console
+            }
+        };
+    
+        fetchUsers();
+    }, []);
+    
     const [formData, setFormData] = useState({
-        user: "",
+        assignedTo: "",
         meals: [
             {
                 meal_time: "",
@@ -22,10 +52,15 @@ const CreateNutrition = () => {
             }
         ],
         total_calories: "",
-        trainer: "",
+        createdBy: "",
     });
 
+    const [users, setUsers] = useState([]);
+    const [trainers, setTrainers] = useState([]);
     const navigate = useNavigate();
+
+    const mealTimesEnum = ["Breakfast", "Lunch", "Dinner", "Snack"];
+   
 
     const handleNutrition = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -41,6 +76,7 @@ const CreateNutrition = () => {
         const updatedMeals = [...formData.meals];
         updatedMeals[mealIndex].food_items[foodIndex][e.target.name] = e.target.value;
         setFormData({ ...formData, meals: updatedMeals });
+        calculateTotalCalories(updatedMeals);
     };
 
     const addFoodItem = (mealIndex) => {
@@ -56,16 +92,50 @@ const CreateNutrition = () => {
         setFormData({ ...formData, meals: updatedMeals });
     };
 
+    const addMeal = () => {
+        setFormData((prev) => ({
+            ...prev,
+            meals: [
+                ...prev.meals,
+                {
+                    meal_time: "",
+                    food_items: [
+                        {
+                            food_name: "",
+                            quantity: "",
+                            calories: "",
+                            protein: "",
+                            carbs: "",
+                            fats: ""
+                        }
+                    ]
+                }
+            ]
+        }));
+    };
+
+    const calculateTotalCalories = (meals) => {
+        let total = 0;
+        meals.forEach(meal => {
+            meal.food_items.forEach(item => {
+                const qty = parseFloat(item.quantity) || 0;
+                const cal = parseFloat(item.calories) || 0;
+                total += qty * cal;
+            });
+        });
+        setFormData((prev) => ({ ...prev, total_calories: total }));
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const { nutritionData } = await axiosInstance.post("nutrition/createNutrition", formData);
-            if (nutritionData?.success) {
+            const { data } = await axiosInstance.post("/nutrition/createNutrition", formData);
+            if (data?.success) {
                 toast.success("Nutrition created successfully");
+                navigate("/Pages/Nutrition");
             } else {
                 toast.error("Failed to create Nutrition");
             }
-            navigate("/Pages/Nutrition");
         } catch (error) {
             toast.error("Something went wrong");
         }
@@ -73,163 +143,114 @@ const CreateNutrition = () => {
 
     return (
         <div className="container mt-5">
-            <h1 className="mb-4">Create Nutrition</h1>
+            <h2 className="mb-4">Create Nutrition Plan</h2>
             <form onSubmit={handleSubmit}>
-                {/* User Input */}
                 <div className="mb-3">
-                    <label htmlFor="user" className="form-label">Assigned To:</label>
-                    <input
-                        type="text"
-                        name="user"
-                        id="user"
-                        className="form-control"
+                    <label className="form-label">Assigned To:</label>
+                    <select
+                        className="form-select"
+                        name="assignedTo"
+                        value={formData.assignedTo}
                         onChange={handleNutrition}
-                        value={formData.user}
-                    />
+                        required
+                    >
+                        <option value="">Select User</option>
+                        {users.map((user) => (
+                            <option key={user._id} value={user._id}>
+                                {user.firstName}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
-                {/* Meals Section */}
-                <div className="mb-3">
-                    <h2>Meals</h2>
+                <div className="mb-4">
+                    <h4>Meals</h4>
                     {formData.meals.map((meal, mealIndex) => (
-                        <div key={mealIndex} className="mb-3">
-                            {/* Meal Time Input */}
-                            <div className="mb-2">
-                                <label htmlFor={`meal_time_${mealIndex}`} className="form-label">Meal Time:</label>
-                                <input
-                                    type="text"
+                        <div key={mealIndex} className="border rounded p-3 mb-4">
+                            <div className="mb-3">
+                                <label className="form-label">Meal Time:</label>
+                                <select
+                                    className="form-select"
                                     name="meal_time"
-                                    id={`meal_time_${mealIndex}`}
-                                    className="form-control"
-                                    onChange={(e) => handleMeals(mealIndex, e)}
                                     value={meal.meal_time}
-                                />
+                                    onChange={(e) => handleMeals(mealIndex, e)}
+                                    required
+                                >
+                                    <option value="">Select Meal Time</option>
+                                    {mealTimesEnum.map((time, idx) => (
+                                        <option key={idx} value={time}>{time}</option>
+                                    ))}
+                                </select>
                             </div>
 
-                            {/* Food Items */}
-                            <div className="mb-2">
-                                <h3>Food Items</h3>
-                                {meal.food_items.map((foodItem, foodIndex) => (
-                                    <div key={foodIndex} className="mb-2">
-                                        {/* Food Name Input */}
-                                        <div className="mb-2">
-                                            <label htmlFor={`food_name_${foodIndex}`} className="form-label">Food Name:</label>
+                            <h5 className="mb-2">Food Items</h5>
+                            {meal.food_items.map((foodItem, foodIndex) => (
+                                <div key={foodIndex} className="row g-2 mb-3">
+                                    {["food_name", "quantity", "calories", "protein", "carbs", "fats"].map((field, i) => (
+                                        <div key={i} className={`col-md-${field === "food_name" ? 4 : 1}`}>
                                             <input
                                                 type="text"
-                                                name="food_name"
-                                                id={`food_name_${foodIndex}`}
                                                 className="form-control"
+                                                name={field}
+                                                placeholder={field.replace("_", " ").toUpperCase()}
+                                                value={foodItem[field]}
                                                 onChange={(e) => handleFoodItem(mealIndex, foodIndex, e)}
-                                                value={foodItem.food_name}
+                                                required
                                             />
                                         </div>
-
-                                        {/* Quantity Input */}
-                                        <div className="mb-2">
-                                            <label htmlFor={`quantity_${foodIndex}`} className="form-label">Quantity:</label>
-                                            <input
-                                                type="text"
-                                                name="quantity"
-                                                id={`quantity_${foodIndex}`}
-                                                className="form-control"
-                                                onChange={(e) => handleFoodItem(mealIndex, foodIndex, e)}
-                                                value={foodItem.quantity}
-                                            />
-                                        </div>
-
-                                        {/* Calories Input */}
-                                        <div className="mb-2">
-                                            <label htmlFor={`calories_${foodIndex}`} className="form-label">Calories:</label>
-                                            <input
-                                                type="number"
-                                                name="calories"
-                                                id={`calories_${foodIndex}`}
-                                                className="form-control"
-                                                onChange={(e) => handleFoodItem(mealIndex, foodIndex, e)}
-                                                value={foodItem.calories}
-                                            />
-                                        </div>
-
-                                        {/* Protein Input */}
-                                        <div className="mb-2">
-                                            <label htmlFor={`protein_${foodIndex}`} className="form-label">Protein:</label>
-                                            <input
-                                                type="number"
-                                                name="protein"
-                                                id={`protein_${foodIndex}`}
-                                                className="form-control"
-                                                onChange={(e) => handleFoodItem(mealIndex, foodIndex, e)}
-                                                value={foodItem.protein}
-                                            />
-                                        </div>
-
-                                        {/* Carbs Input */}
-                                        <div className="mb-2">
-                                            <label htmlFor={`carbs_${foodIndex}`} className="form-label">Carbs:</label>
-                                            <input
-                                                type="number"
-                                                name="carbs"
-                                                id={`carbs_${foodIndex}`}
-                                                className="form-control"
-                                                onChange={(e) => handleFoodItem(mealIndex, foodIndex, e)}
-                                                value={foodItem.carbs}
-                                            />
-                                        </div>
-
-                                        {/* Fats Input */}
-                                        <div className="mb-2">
-                                            <label htmlFor={`fats_${foodIndex}`} className="form-label">Fats:</label>
-                                            <input
-                                                type="number"
-                                                name="fats"
-                                                id={`fats_${foodIndex}`}
-                                                className="form-control"
-                                                onChange={(e) => handleFoodItem(mealIndex, foodIndex, e)}
-                                                value={foodItem.fats}
-                                            />
-                                        </div>
-                                    </div>
-                                ))}
-                                <button type="button" className="btn btn-secondary" onClick={() => addFoodItem(mealIndex)}>
-                                    Add Food Item
-                                </button>
-                            </div>
+                                    ))}
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary btn-sm"
+                                onClick={() => addFoodItem(mealIndex)}
+                            >
+                                + Add Food Item
+                            </button>
                         </div>
                     ))}
-                </div>
-
-                {/* Total Calories */}
-                <div className="mb-3">
-                    <label htmlFor="total_calories" className="form-label">Total Calories:</label>
-                    <input
-                        type="number"
-                        name="total_calories"
-                        id="total_calories"
-                        className="form-control"
-                        onChange={handleNutrition}
-                        value={formData.total_calories}
-                    />
-                </div>
-
-                {/* Trainer Input */}
-                <div className="mb-3">
-                    <label htmlFor="trainer" className="form-label">Created By:</label>
-                    <input
-                        type="text"
-                        name="trainer"
-                        id="trainer"
-                        className="form-control"
-                        onChange={handleNutrition}
-                        value={formData.trainer}
-                    />
-                </div>
-
-                {/* Submit Button */}
-                <div className="mb-3">
-                    <button type="submit" className="btn btn-primary">
-                        Save Nutrition
+                    <button
+                        type="button"
+                        className="btn btn-outline-primary"
+                        onClick={addMeal}
+                    >
+                        + Add Meal
                     </button>
                 </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Total Calories:</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="total_calories"
+                        value={formData.total_calories}
+                        readOnly
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Created By:</label>
+                    <select
+                        className="form-select"
+                        name="createdBy"
+                        value={formData.createdBy}
+                        onChange={handleNutrition}
+                        required
+                    >
+                        <option value="">Select Trainer</option>
+                        {trainers.map((trainer) => (
+                            <option key={trainer._id} value={trainer._id}>
+                                {trainer.firstName}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <button type="submit" className="btn btn-success w-100">
+                    Save Nutrition Plan
+                </button>
             </form>
         </div>
     );
