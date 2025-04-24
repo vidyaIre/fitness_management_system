@@ -34,3 +34,13 @@ export const getAllSessions = async () => {
         throw error;
     }
 }
+export const  createSession = async (payload) => {
+    console.log("new sesstion is:", payload);
+    const result = await axiosInstance.post("/session/createSession", payload)
+    .catch((error) => {
+        console.log("Error creating new Session:", error);
+        throw error;
+    });
+    console.log("result is:", result);
+    return result?.data;
+}

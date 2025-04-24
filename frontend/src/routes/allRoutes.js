@@ -6,11 +6,13 @@ import Register from '../Pages/Register';
 import { Navigate } from 'react-router-dom';
 import CreateWorkout from '../Pages/createWorkout';
 import CreateNutrition from '../Pages/CreateNutrition';
+import CreateSession from '../Pages/CreateSession';
 import Users from '../Pages/Users';
 import NotFound from '../Pages/NotFound';
 import Workouts from '../Pages/Workouts';
 import Nutrition from '../Pages/Nutrition';
 import Sessions from '../Pages/Sessions';
+import DashboardTrainer from '../Pages/DashboardTrainer';
 
 const isAuth = () => {
 const token = localStorage.getItem('@token');
@@ -59,6 +61,14 @@ const userRoutes = createBrowserRouter([
     {
         path:"/Pages/CreateNutrition",
         element:<ProtecterRoute element={<CreateNutrition/>}/>
+    },
+    {
+        path:"/Pages/CreateSession",
+        element:<ProtecterRoute element={<CreateSession/>}/>
+    },
+    {
+        path:"/Pages/DashboardTrainer",
+        element:<ProtecterRoute element={<DashboardTrainer/>}/>
     },
     {
          path: "*",

@@ -5,52 +5,19 @@ import { toast } from 'react-toastify';
 import { getUserAll } from '../apiUtils/userApi';
 
 const CreateNutrition = () => {
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const  data  = await getUserAll();
-                console.log("Fetched users data:", data); // Log full response
-                if (data?.success && data?.users) {
-                    // Ensure 'users' is a valid array
-                    const allUsers = data.users;
-                    console.log("All users fetched:", allUsers); // Log all users
-    
-                    // Filter users by role
-                    const filteredUsers = allUsers.filter(user => user.role === 'user');
-                    const filteredTrainers = allUsers.filter(user => user.role === 'trainer');
-    
-                    setUsers(filteredUsers);
-                    setTrainers(filteredTrainers);
-                } else {
-                    toast.error("Failed to fetch users");
-                    console.error("Invalid data structure:", data); // Log if structure is not as expected
-                }
-            } catch (err) {
-                toast.error("Error fetching users: " + err.message);
-                console.error("Error fetching users:", err); // Log error in the console
-            }
-        };
-    
-        fetchUsers();
-    }, []);
-    
     const [formData, setFormData] = useState({
         assignedTo: "",
-        meals: [
-            {
-                meal_time: "",
-                food_items: [
-                    {
-                        food_name: "",
-                        quantity: "",
-                        calories: "",
-                        protein: "",
-                        carbs: "",
-                        fats: ""
-                    }
-                ]
-            }
-        ],
+        meals: [{
+            meal_time: "",
+            food_items: [{
+                food_name: "",
+                quantity: "",
+                calories: "",
+                protein: "",
+                carbs: "",
+                fats: ""
+            }]
+        }],
         total_calories: "",
         createdBy: "",
     });
@@ -58,9 +25,25 @@ const CreateNutrition = () => {
     const [users, setUsers] = useState([]);
     const [trainers, setTrainers] = useState([]);
     const navigate = useNavigate();
-
     const mealTimesEnum = ["Breakfast", "Lunch", "Dinner", "Snack"];
-   
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const data = await getUserAll();
+                if (data?.success && data?.users) {
+                    const allUsers = data.users;
+                    setUsers(allUsers.filter(user => user.role === 'user'));
+                    setTrainers(allUsers.filter(user => user.role === 'trainer'));
+                } else {
+                    toast.error("Failed to fetch users");
+                }
+            } catch (err) {
+                toast.error("Error fetching users: " + err.message);
+            }
+        };
+        fetchUsers();
+    }, []);
 
     const handleNutrition = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -95,22 +78,17 @@ const CreateNutrition = () => {
     const addMeal = () => {
         setFormData((prev) => ({
             ...prev,
-            meals: [
-                ...prev.meals,
-                {
-                    meal_time: "",
-                    food_items: [
-                        {
-                            food_name: "",
-                            quantity: "",
-                            calories: "",
-                            protein: "",
-                            carbs: "",
-                            fats: ""
-                        }
-                    ]
-                }
-            ]
+            meals: [...prev.meals, {
+                meal_time: "",
+                food_items: [{
+                    food_name: "",
+                    quantity: "",
+                    calories: "",
+                    protein: "",
+                    carbs: "",
+                    fats: ""
+                }]
+            }]
         }));
     };
 
@@ -143,39 +121,25 @@ const CreateNutrition = () => {
 
     return (
         <div className="container mt-5">
-            <h2 className="mb-4">Create Nutrition Plan</h2>
-            <form onSubmit={handleSubmit}>
+            <h2 className="mb-4 text-center">Create Nutrition Plan</h2>
+            <form onSubmit={handleSubmit} className="shadow p-4 rounded bg-white">
                 <div className="mb-3">
                     <label className="form-label">Assigned To:</label>
-                    <select
-                        className="form-select"
-                        name="assignedTo"
-                        value={formData.assignedTo}
-                        onChange={handleNutrition}
-                        required
-                    >
+                    <select className="form-select" name="assignedTo" value={formData.assignedTo} onChange={handleNutrition} required>
                         <option value="">Select User</option>
                         {users.map((user) => (
-                            <option key={user._id} value={user._id}>
-                                {user.firstName}
-                            </option>
+                            <option key={user._id} value={user._id}>{user.firstName}</option>
                         ))}
                     </select>
                 </div>
 
-                <div className="mb-4">
-                    <h4>Meals</h4>
-                    {formData.meals.map((meal, mealIndex) => (
-                        <div key={mealIndex} className="border rounded p-3 mb-4">
+                <h4 className="my-4">Meals</h4>
+                {formData.meals.map((meal, mealIndex) => (
+                    <div key={mealIndex} className="card mb-4">
+                        <div className="card-body">
                             <div className="mb-3">
                                 <label className="form-label">Meal Time:</label>
-                                <select
-                                    className="form-select"
-                                    name="meal_time"
-                                    value={meal.meal_time}
-                                    onChange={(e) => handleMeals(mealIndex, e)}
-                                    required
-                                >
+                                <select className="form-select" name="meal_time" value={meal.meal_time} onChange={(e) => handleMeals(mealIndex, e)} required>
                                     <option value="">Select Meal Time</option>
                                     {mealTimesEnum.map((time, idx) => (
                                         <option key={idx} value={time}>{time}</option>
@@ -183,11 +147,11 @@ const CreateNutrition = () => {
                                 </select>
                             </div>
 
-                            <h5 className="mb-2">Food Items</h5>
+                            <h5>Food Items</h5>
                             {meal.food_items.map((foodItem, foodIndex) => (
-                                <div key={foodIndex} className="row g-2 mb-3">
+                                <div key={foodIndex} className="row g-3 align-items-end mb-3">
                                     {["food_name", "quantity", "calories", "protein", "carbs", "fats"].map((field, i) => (
-                                        <div key={i} className={`col-md-${field === "food_name" ? 4 : 1}`}>
+                                        <div key={i} className={`col-md-${field === "food_name" ? 4 : 2}`}>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -201,49 +165,27 @@ const CreateNutrition = () => {
                                     ))}
                                 </div>
                             ))}
-                            <button
-                                type="button"
-                                className="btn btn-outline-secondary btn-sm"
-                                onClick={() => addFoodItem(mealIndex)}
-                            >
+                            <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => addFoodItem(mealIndex)}>
                                 + Add Food Item
                             </button>
                         </div>
-                    ))}
-                    <button
-                        type="button"
-                        className="btn btn-outline-primary"
-                        onClick={addMeal}
-                    >
-                        + Add Meal
-                    </button>
-                </div>
+                    </div>
+                ))}
+                <button type="button" className="btn btn-outline-primary mb-4" onClick={addMeal}>
+                    + Add Meal
+                </button>
 
                 <div className="mb-3">
                     <label className="form-label">Total Calories:</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        name="total_calories"
-                        value={formData.total_calories}
-                        readOnly
-                    />
+                    <input type="number" className="form-control" name="total_calories" value={formData.total_calories} readOnly />
                 </div>
 
                 <div className="mb-3">
                     <label className="form-label">Created By:</label>
-                    <select
-                        className="form-select"
-                        name="createdBy"
-                        value={formData.createdBy}
-                        onChange={handleNutrition}
-                        required
-                    >
+                    <select className="form-select" name="createdBy" value={formData.createdBy} onChange={handleNutrition} required>
                         <option value="">Select Trainer</option>
                         {trainers.map((trainer) => (
-                            <option key={trainer._id} value={trainer._id}>
-                                {trainer.firstName}
-                            </option>
+                            <option key={trainer._id} value={trainer._id}>{trainer.firstName}</option>
                         ))}
                     </select>
                 </div>
