@@ -12,15 +12,17 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        match:[/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Please fill a valid email address']
+        match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Please fill a valid email address']
     },
     password: {
         type: String,
         required: true
     },
     phone: {
-        type: Number,
-       
+        type: Number
+    },
+    image: {
+        type: String
     },
     role: {
         type: String,
@@ -56,25 +58,24 @@ const userSchema = new mongoose.Schema({
     //Trainer specific fields
     specialization: {
         type: String,
-        enum: ['yoga', 'weightlifting', 'cardio', 'nutrition', 'rehabilitation'],
-
-
+        enum: ['yoga', 'weightlifting', 'cardio', 'nutrition', 'rehabilitation']
     },
     experience: {
-        type: Number,
-
-
+        type: Number
     },
     certification: {
         type: String,
-
-    },
-    availability: [
-        {
-            day: String,
-            time: String
-        }
-    ]
+         enum: [
+            'ACE',
+            'NASM',
+            'ISSA',
+            'NSCA',
+            'ACSM',
+            'NESTA',
+            'Other'
+        ],
+        default: 'Other'
+    }
     ,
     isActive: {
         type: Boolean,

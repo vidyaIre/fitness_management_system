@@ -2,11 +2,30 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const generateToken = require("../utility/generateToken");
+const imageUpload = require('../utility/imageUpload');
 
 // Register a new user
 exports.registerUser = async (req, res) => {
-    const { firstName, lastName, email, password, phone, role } = req.body;
-    console.log("data:", firstName, lastName, email, password, phone, role);
+    const {
+        firstName,
+        lastName,
+        email,
+        password,
+        phone,
+        role,
+        image,
+        age,
+        gender,
+        weight,
+        height,
+        goal,
+        memberShip,
+        specialization,
+        experience,
+        certification,
+        availability
+    } = req.body;
+    console.log("data:", firstName, lastName, email, password, phone, role, image, age, gender, weight, height, goal, memberShip, specialization, experience, certification, availability);
 
     try {
         const user = await User.findOne({ email });
@@ -22,15 +41,36 @@ exports.registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const newUser = new User({
+        const cloudinaryImage =req.file ?await imageUpload(req.file.path):null;
+
+        const newUserData = new User({
             firstName,
             lastName,
             email,
             password: hashedPassword,
-            phone,
-            role
+            role,
+            image:cloudinaryImage,
+            age,
+            gender
         });
+        if (role === 'user') {
+            newUserData.phone = phone;
+            newUserData.weight = weight;
+            newUserData.height = height;
+            newUserData.goal = goal;
+            newUserData.memberShip = memberShip;
+        }
 
+        if (role === 'trainer') {
+            newUserData.specialization = specialization;
+            newUserData.experience = experience;
+            newUserData.certification = certification;
+        }
+        if (role === 'admin') {
+            newUserData.phone = phone;
+        }
+
+        const newUser = new User(newUserData);
         await newUser.save();
 
         const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
@@ -41,11 +81,23 @@ exports.registerUser = async (req, res) => {
             message: "User registered successfully",
             user: {
                 id: newUser._id,
-                firstName: newUser.firstName,
-                lastName: newUser.lastName,
-                email: newUser.email,
-                phone: newUser.phone,
-                role: newUser.role
+                firstName: newUser?.firstName,
+                lastName: newUser?.lastName,
+                email: newUser?.email,
+                phone: newUser?.phone,
+                role: newUser?.role,
+                image: newUser?.image,
+                age: newUser?.age,
+                gender: newUser?.gender,
+                weight: newUser?.weight,
+                height: newUser?.height,
+                goal: newUser?.goal,
+                memberShip: newUser?.memberShip,
+                specialization: newUser?.specialization,
+                experience: newUser?.experience,
+                certification: newUser?.certification
+
+
             },
             token
         });

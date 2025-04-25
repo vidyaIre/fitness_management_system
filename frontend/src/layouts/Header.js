@@ -53,30 +53,32 @@ const Navbar = () => {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="#">
-                    Action
+                  <a className="dropdown-item" href="/Pages/CreateWorkout">
+                    Create Workout
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
-                    Another action
+                  <a className="dropdown-item" href="/Pages/createSession">
+                    Create Session
                   </a>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
-                    Something else here
+                  <a className="dropdown-item" href="/Pages/CreateNutrition">
+                    create Nutrition
                   </a>
+                
                 </li>
               </ul>
             </li>
             <li className="nav-item">
-              <a className="nav-link active text-white" aria-disabled="true">
-              Trainer
+              <a className="nav-link text-white" href="/Pages/DashboardTrainer">
+               Trainer
               </a>
             </li>
+            
           </ul>
           <form className="d-flex" role="search">
             <input

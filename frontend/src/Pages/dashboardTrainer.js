@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getUserAll } from "../apiUtils/userApi";
+import { getAllSessions } from "../apiUtils/sessionApi";
 
 const DashboardTrainer = () => {
   const [dashTrainer, setDashTrainer] = useState([]);
+  const [sessions, setSessions] = useState([]);
+  const [scheduleSession, setScheduleSession] =useState([]);
+  const [complteSession, setCompleSession] = useState([]);
+  const [cancelSession, setCancelSession] = useState([]);
 
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
         const userData = await getUserAll();
         console.log("user data:", userData);
-        const trainer = userData?.users.filter(trainer => trainer.role==="trainer") ||[];
+        const trainer = userData?.users.filter(trainer => trainer.role === "trainer") || [];
         console.log("trainer only:", trainer);
-        
-        setDashTrainer(trainer|| []);
-       
-        
+
+        setDashTrainer(trainer || []);
+
+
 
         if (userData?.success) {
           toast.success("Trainer fetched successfuly");
@@ -29,34 +34,69 @@ const DashboardTrainer = () => {
 
     fetchTrainer();
   }, []);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const dataValue = await getAllSessions();
+        console.log(dataValue);
+
+        const scheduleSession = dataValue.sessions.filter(session => session.status === "scheduled");
+        console.log("scheduled session is:", scheduleSession);
+        const complteSession = dataValue.sessions.filter(session => session.status === "completed");
+        console.log("completed session is:", complteSession);
+        const  cancelSession = dataValue.sessions.filter(session  => session.status === "cancelled");
+        console.log("cancelled session is:", cancelSession);
+
+        setSessions(dataValue);
+        setScheduleSession(scheduleSession);
+        setCompleSession(complteSession);
+        setCancelSession(cancelSession);
+
+      } catch (error) {
+        toast.error("Fialed to fetch session list:");
+      }
+    };
+
+    fetchSession();
+  }, []);
+
   const count = dashTrainer.length || 0;
-  console.log(count);
+  console.log("count:",count);
+
+
   return (
     <div className="mt-5">
       <h2 className="text-center mb-4 text-primary">Trainer Dashboard</h2>
 
       {/* Stats Summary */}
       <div className="mb-4 row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <div className="text-center border shadow-sm p-4">
             <div>Total Trainer</div>
             <div className="fs-4 fw-bold">{dashTrainer.length}</div>
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-3">
           <div className="text-center border shadow-sm p-4">
             <div>Upcoming Sessions</div>
-            <div className="fs-4 fw-bold">6</div>
+            <div className="fs-4 fw-bold">{scheduleSession.length+1}</div>
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-3">
           <div className="text-center border shadow-sm p-4">
-            <div>Completed Workouts</div>
-            <div className="fs-4 fw-bold">120</div>
+            <div>Completed Session</div>
+            <div className="fs-4 fw-bold">{complteSession.length+1}</div>
+          </div>
+        </div>
+        <div className="col-md-3">
+          <div className="text-center border shadow-sm p-4">
+            <div>Cancelled Sessions</div>
+            <div className="fs-4 fw-bold">{cancelSession.length+1}</div>
           </div>
         </div>
       </div>
-      
+
 
       {/* Upcoming Sessions and Clients */}
       <div className="row">
@@ -75,37 +115,61 @@ const DashboardTrainer = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>April 25</td>
-                  <td>John Doe</td>
-                  <td>Chest Day</td>
-                  <td>10:00 AM</td>
-                </tr>
-                <tr>
-                  <td>April 26</td>
-                  <td>Jane Smith</td>
-                  <td>Leg Day</td>
-                  <td>12:00 PM</td>
-                </tr>
+                {
+                  scheduleSession.map((session,i) => (
+                    <tr key={i}>
+                      <td>{session?.date.split("T")[0]}</td>
+                      <td>{session.user?.firstName}{ '.'}{session.user?.lastName}</td>
+                      <td>{session.workout?.title}</td>
+                      <td>{session.time}</td>
+
+                    </tr>
+                  ))
+                }
+              
               </tbody>
             </table>
           </div>
         </div>
 
         <div className="col-md-4">
-          <div className="shadow-sm mb-4">
-            <div className="bg-secondary text-white p-3">
-              Active Trainers
+  <div className="mb-4">
+    <div className="bg-secondary text-white p-3">
+      Active Trainers
+    </div>
+    <div className="row row-cols-1 g-3 mt-2">
+      {dashTrainer.map((trainer, idx) => (
+        <div className="col" key={idx}>
+          <div className="card h-100 shadow-sm">
+            <div className="row g-0">
+              <div className="col-4">
+                <img
+                  src={trainer.image || "https://via.placeholder.com/100"}
+                  alt={`${trainer.firstName} ${trainer.lastName}`}
+                  className="img-fluid rounded-start"
+                />
+              </div>
+              <div className="col-8">
+                <div className="card-body">
+                  <h6 className="card-title mb-1">
+                    {trainer.firstName} {trainer.lastName}
+                  </h6>
+                  <p className="card-text mb-1">
+                    <strong>Email:</strong> {trainer.email}
+                  </p>
+                  <p className="card-text">
+                    <small className="text-muted">Role: {trainer.role}</small>
+                  </p>
+                </div>
+              </div>
             </div>
-            <ul className="list-group">
-              {dashTrainer.map((trainers, idx) => (
-                <li key={idx} className="list-group-item">
-                  {trainers.firstName} {trainers.lastName}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
+      ))}
+    </div>
+  </div>
+</div>
+
       </div>
 
       {/* Call-to-Action */}

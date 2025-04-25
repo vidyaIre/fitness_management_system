@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import axiosInstance from '../config/axiosConfig';
 
 function Register() {
+  const [imageFile, setImageFile] = useState();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -14,10 +15,10 @@ function Register() {
     age: '',
     gender: '',
     role: '',
+    image: '',
     specialization: '',
     experience: '',
     certification: '',
-    availability: '',
     weight: '',
     height: '',
     goal: '',
@@ -49,9 +50,21 @@ function Register() {
       payload.phone = formData.phone;
 
     }
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+
+    if (imageFile) {
+      formDataToSend.append('image', imageFile);
+    }
 
     try {
-      const { data } = await axiosInstance.post("user/registerUser", formData);
+      const { data } = await axiosInstance.post("user/registerUser", formDataToSend,{
+        headers:{
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       console.log("data from register is:", data);
       localStorage.setItem("@token", JSON.stringify(data?.token));
       localStorage.setItem("@user", JSON.stringify(data?.user));
@@ -118,6 +131,18 @@ function Register() {
                     <option value="other">Other</option>
                   </select>
                 </div>
+                <div className='mb-3'>
+                  <label htmlFor='img' className='form-label'>Image</label>
+                  <input
+                    type='file'
+                    name='image'
+                    className='form-control'
+                    placeholder='enter img link'
+                    onChange={(e) => setImageFile(e.target.files[0])}
+                  />
+
+
+                </div>
 
                 <div className="mb-4">
                   <label htmlFor='role' className='form-label'>Role</label>
@@ -134,7 +159,7 @@ function Register() {
                       <div className="mb-3">
                         <label htmlFor='specialization' className='form-label'>Specialization: </label>
                         <select className="form-select" id="specialization" name="specialization" value={formData.specialization} onChange={handleRegister}>
-                          <option value="">Select Specialization</option> 
+                          <option value="">Select Specialization</option>
                           <option value="yoga">Yoga</option>
                           <option value="weightlifting">Weightlifting</option>
                           <option value="cardio">Cardio</option>

@@ -25,6 +25,8 @@ app.use('/api/payment', paymentRoute);
 const stripeRoute = require('./routes/stripeRoute');
 app.use('/api/stripe', stripeRoute);
 
+
+
 app.get('/', (req, res) => {
     res.send('Fitness Management System is running....');
 });
