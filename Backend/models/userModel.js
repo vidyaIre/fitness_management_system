@@ -73,10 +73,18 @@ const userSchema = new mongoose.Schema({
             'ACSM',
             'NESTA',
             'Other'
-        ],
-        default: 'Other'
-    }
-    ,
+        ]
+    },
+    otp:{
+        type: String
+    },
+    otpExpiry:{
+        type:Date
+    },
+    isVerified: {
+        type:Boolean,
+        default:false
+    },
     isActive: {
         type: Boolean,
         default: true

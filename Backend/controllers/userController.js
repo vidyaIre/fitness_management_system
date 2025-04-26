@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const generateToken = require("../utility/generateToken");
 const imageUpload = require('../utility/imageUpload');
+const generateOtp = require('../utility/generateOtp');
+const sendOtpEmail = require('../utility/sendOtpEmail');
 
 // Register a new user
 exports.registerUser = async (req, res) => {
@@ -22,10 +24,12 @@ exports.registerUser = async (req, res) => {
         memberShip,
         specialization,
         experience,
-        certification,
-        availability
+        certification
+        // otp,
+        // otpExpiry,
+        // isVerified
     } = req.body;
-    console.log("data:", firstName, lastName, email, password, phone, role, image, age, gender, weight, height, goal, memberShip, specialization, experience, certification, availability);
+    console.log("data:", firstName, lastName, email, password, phone, role, image, age, gender, weight, height, goal, memberShip, specialization, experience, certification);
 
     try {
         const user = await User.findOne({ email });
@@ -43,6 +47,8 @@ exports.registerUser = async (req, res) => {
 
         const cloudinaryImage =req.file ?await imageUpload(req.file.path):null;
 
+        const gotp = generateOtp();
+
         const newUserData = new User({
             firstName,
             lastName,
@@ -51,7 +57,10 @@ exports.registerUser = async (req, res) => {
             role,
             image:cloudinaryImage,
             age,
-            gender
+            gender,
+            otp:gotp,
+            otpExpiry:Date.now() + 5 * 60 * 1000,
+            isVerified:false
         });
         if (role === 'user') {
             newUserData.phone = phone;
@@ -72,7 +81,7 @@ exports.registerUser = async (req, res) => {
 
         const newUser = new User(newUserData);
         await newUser.save();
-
+        sendOtpEmail(email, gotp);
         const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
 
         res.status(201).json({
@@ -95,7 +104,10 @@ exports.registerUser = async (req, res) => {
                 memberShip: newUser?.memberShip,
                 specialization: newUser?.specialization,
                 experience: newUser?.experience,
-                certification: newUser?.certification
+                certification: newUser?.certification,
+                otp:newUser?.otp,
+                otpExpiry:newUser?.otpExpiry,
+                isVerified:newUser?.isVerified
 
 
             },
@@ -282,4 +294,34 @@ exports.deleteUser = async (req, res) => {
     }
 
 };
+exports.verifyOtp = async (req, res) => {
+    try {
+      const { email, otp } = req.body;
+  
+      const user = await User.findOne({ email });
+      if (!user) return res.status(400).json({ message: 'User not found' });
+  
+      if (user.isVerified) return res.status(400).json({ message: 'User already verified' });
+  
+      if (user.otp !== otp) {
+        return res.status(400).json({ message: 'Invalid OTP' });
+      }
+  
+      if (user.otpExpiry < new Date()) {
+        return res.status(400).json({ message: 'OTP expired' });
+      }
+  
+      user.isVerified = true;
+      user.otp = undefined;
+      user.otpExpiry = undefined;
+      await user.save();
+  
+      res.status(200).json({ success: true, message: "User verified successfully" });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  };
+  
 

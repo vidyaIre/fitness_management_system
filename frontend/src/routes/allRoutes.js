@@ -13,6 +13,7 @@ import Workouts from '../Pages/Workouts';
 import Nutrition from '../Pages/Nutrition';
 import Sessions from '../Pages/Sessions';
 import DashboardTrainer from '../Pages/DashboardTrainer';
+import VerifyOtp from '../Pages/verifyOtp';
 
 const isAuth = () => {
 const token = localStorage.getItem('@token');
@@ -69,6 +70,10 @@ const userRoutes = createBrowserRouter([
     {
         path:"/Pages/DashboardTrainer",
         element:<ProtecterRoute element={<DashboardTrainer/>}/>
+    },
+    {
+        path:"/Pages/verifyOtp",
+        element:<ProtecterRoute element={<VerifyOtp/>}/>
     },
     {
          path: "*",

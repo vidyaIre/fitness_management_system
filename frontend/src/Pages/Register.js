@@ -23,7 +23,10 @@ function Register() {
     height: '',
     goal: '',
     memberShip: '',
-    phone: ''
+    phone: '',
+    otp:'',
+    otpExpiry:'',
+    isVarified:''
   });
   const navigate = useNavigate();
 
@@ -60,8 +63,8 @@ function Register() {
     }
 
     try {
-      const { data } = await axiosInstance.post("user/registerUser", formDataToSend,{
-        headers:{
+      const { data } = await axiosInstance.post("user/registerUser", formDataToSend, {
+        headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
@@ -76,7 +79,7 @@ function Register() {
       } else {
         toast.error("Registration failed");
       }
-      navigate("/Pages/Users");
+      navigate("/Pages/verifyOtp", {state : {email:formData.email}});
       return;
 
     } catch (error) {
@@ -172,16 +175,21 @@ function Register() {
                         <label htmlFor='experience' className='form-label'>Experience: </label>
                         <input type="number" className="form-control" id="experience" name="experience" placeholder="Experience in years" value={formData.experience} onChange={handleRegister} />
                       </div>
-
-                      <div className="mb-3">
+                      
+                       <div className="mb-3">
                         <label htmlFor='certification' className='form-label'>Certification: </label>
-                        <input type="text" className="form-control" id="certification" name="certification" placeholder="Certification" value={formData.certification} onChange={handleRegister} />
+                        <select className="form-select" id="certification" name="certification" value={formData.certification} onChange={handleRegister}>
+                          <option value="">Select Certification</option>
+                          <option value="ACE">ACE</option>
+                          <option value="NACM">NACM</option>
+                          <option value="ISSA">ISSA</option>
+                          <option value="NSCA">NSCA</option>
+                          <option value="ASCM">ASCM</option>
+                          <option value="NESTA">NESTA</option>
+                          <option value="Other">Other</option>
+                        </select>
                       </div>
-
-                      <div className="mb-3">
-                        <label htmlFor='availability' className='form-label'>Availability: </label>
-                        <input type="text" className="form-control" id="availability" name="availability" placeholder="Availability" value={formData.availability} onChange={handleRegister} />
-                      </div>
+                      
                     </>
                   )
                 }
