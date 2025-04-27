@@ -27,7 +27,7 @@ const Home = () => {
           {/* Left side - Image */}
           <div className="col-md-6 mb-4 mb-md-0">
             <img
-              src="https://img.freepik.com/premium-photo/fit-woman-doing-sit-ups-gym_470178-8717.jpg"
+              src="https://res.cloudinary.com/dbaklqnls/image/upload/v1745748978/image7.jpg"
               alt="Workout"
               className="img-fluid rounded shadow"
               style={{ height: '400px', objectFit: 'cover', width: '100%' }}
@@ -60,7 +60,7 @@ const Home = () => {
           {/* Right Side - Image */}
           <div className="col-md-6">
             <img
-              src="https://wallpapercave.com/wp/wp5339178.jpg"
+              src="https://res.cloudinary.com/dbaklqnls/image/upload/v1745748986/image8.jpg"
               alt="Fitness"
               className="img-fluid rounded shadow"
               style={{ height: '400px', objectFit: 'cover', width: '100%' }}

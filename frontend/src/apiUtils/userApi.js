@@ -59,4 +59,4 @@ export const registerUser = async (payload) => {
     console.log("result is:", result);
     return result?.data;
 
-}
+};

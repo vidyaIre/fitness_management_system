@@ -295,7 +295,9 @@ exports.deleteUser = async (req, res) => {
 
 };
 exports.verifyOtp = async (req, res) => {
+    console.log("email verification");
     try {
+       
       const { email, otp } = req.body;
   
       const user = await User.findOne({ email });
@@ -303,7 +305,7 @@ exports.verifyOtp = async (req, res) => {
   
       if (user.isVerified) return res.status(400).json({ message: 'User already verified' });
   
-      if (user.otp !== otp) {
+      if (user.otp !== String(otp)){
         return res.status(400).json({ message: 'Invalid OTP' });
       }
   
@@ -321,6 +323,7 @@ exports.verifyOtp = async (req, res) => {
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, message: "Server error" });
+      localStorage.clear();
     }
   };
   

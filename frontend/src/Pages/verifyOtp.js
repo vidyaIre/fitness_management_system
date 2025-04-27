@@ -13,8 +13,9 @@ function VerifyOtp() {
     e.preventDefault();
 
     try {
-      const { data } = await axiosInstance.post('/user/verify-otp', { email, otp });
-
+      // console.log("arun");
+      const { data } = await axiosInstance.post('/user/verifyOtp', { email, otp });
+      console.log("registerd data is:", data);
       if (data.success) {
         toast.success("OTP verified successfully!");
         navigate("/Pages/Users"); // or login page
@@ -32,13 +33,13 @@ function VerifyOtp() {
       <h2 className="text-center mb-4">Enter OTP</h2>
       <form onSubmit={handleOtpSubmit}>
         <div className="mb-3">
-          <input 
-            type="text" 
-            className="form-control" 
-            placeholder="Enter OTP" 
-            value={otp} 
-            onChange={(e) => setOtp(e.target.value)} 
-            required 
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter OTP"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            required
           />
         </div>
         <button type="submit" className="btn btn-primary w-100">Verify OTP</button>

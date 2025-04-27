@@ -15,7 +15,7 @@ exports.createWorkout = async (req, res) => {
         const data = await User.findOne({ firstName: user });
         console.log("user is  ", data);
         const newWorkout = new workout({
-            user: data._id,
+            user,
             title,
             description,
             exercises
