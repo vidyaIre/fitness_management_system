@@ -1,10 +1,7 @@
-import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getUserAll } from '../apiUtils/userApi';
 import { getAllWorkouts } from '../apiUtils/workoutApi';
-
 
 const DashboardUser = () => {
   const [userData, setUserData] = useState([]);
@@ -39,15 +36,17 @@ const DashboardUser = () => {
     const fetchWorkout = async () => {
       try {
         const workoutValue = await getAllWorkouts();
-        console.log(workoutValue);
+        console.log("get workouts:", workoutValue);
         if (workoutValue && workoutValue.workouts) {
-        setWorkouts(workoutValue || []);
+          setWorkouts(workoutValue.workouts);
+          console.log("workouts fetched:", workoutValue.workouts);
         }
-        else{
+        else {
           setWorkouts([]);
         }
       } catch (error) {
         toast.error("Failed to fetch workout list:");
+        setWorkouts([]);
       }
     };
     fetchWorkout();
@@ -67,20 +66,54 @@ const DashboardUser = () => {
           <h2 className="text-center">{user.firstName} {user.lastName}</h2>
           <p className="text-center">{user.email}</p>
           <p className="text-center">{user.role}</p>
-          {/* Add more fields like age, gender, etc if needed */}
+
           <div className="mt-3">
-            <h5 className="text-center">Workouts Completed: {workouts.length}</h5>
-            <ul className="list-group list-group-flush">
-              {workouts.map((workout) => (
-                <li key={workout._id} className="list-group-item">
-                  {workout.name || workout.sessionType || "Workout"} - {workout.date ? new Date(workout.date).toLocaleDateString() : ""}
-                </li>
-              ))}
-            </ul>
+            <h5 className="text-center">
+              Workouts Completed: {
+                workouts.filter(workout => String(workout?.user?._id) === String(user?._id)).length
+              }
+            </h5>
+
+            {workouts.filter(workout => String(workout.user?._id) === String(user._id)).length === 0 ? (
+              <p className="text-center text-muted">No workouts completed yet.</p>
+            ) : (
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Exercises</th>
+                    <th scope="col">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {workouts
+                    .filter(workout => String(workout.user?._id) === String(user._id))
+                    .map((workout) => (
+                      <tr key={workout._id}>
+                        <td>{workout.title}</td>
+                        <td>{workout.description}</td>
+                        <td>
+                          <ul>
+                            {workout.exercises.map((exercise, index) => (
+                              <li key={index}>
+                                {exercise.name} - {exercise.sets} sets of {exercise.reps} reps
+                                {exercise.weight ? ` (Weight: ${exercise.weight} kg)` : ''}
+                              </li>
+                            ))}
+                          </ul>
+                        </td>
+                        <td>{new Date(workout.createdAt).toLocaleDateString()}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       ))}
     </div>
   );
 };
+
 export default DashboardUser;
