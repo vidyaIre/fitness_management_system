@@ -114,7 +114,7 @@ const CreateSession = () => {
                                 <option value="">Select Workout</option>
                                 {workouts.map((workout) => (
                                     <option key={workout._id} value={workout._id}>
-                                        {workout?.user?.firstName || "Unnamed Workout"}
+                                        {workout?.title || "Unnamed Workout"}
                                     </option>
                                 ))}
                             </select>

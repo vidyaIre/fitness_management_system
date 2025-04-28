@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getUserAll } from '../apiUtils/userApi';
 import { getAllWorkouts } from '../apiUtils/workoutApi';
+import '../index.css'; // Custom CSS file for additional styles
 
 const DashboardUser = () => {
   const [userData, setUserData] = useState([]);
@@ -10,14 +11,10 @@ const DashboardUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = localStorage.getItem("token");
-        console.log("token is:", token);
         const res = await getUserAll();
-        console.log("result is:", res);
+        //console.log("first", res);
         const user = res?.users.filter(user => user.role === 'user') || [];
-        console.log("useronly:", user);
         setUserData(user || []);
-
         if (res?.success) {
           toast.success("Users fetched successfully");
         } else {
@@ -28,7 +25,6 @@ const DashboardUser = () => {
         toast.error("Error fetching users");
       }
     };
-
     fetchUser();
   }, []);
 
@@ -36,16 +32,14 @@ const DashboardUser = () => {
     const fetchWorkout = async () => {
       try {
         const workoutValue = await getAllWorkouts();
-        console.log("get workouts:", workoutValue);
+        console.log("second:", workoutValue);
         if (workoutValue && workoutValue.workouts) {
           setWorkouts(workoutValue.workouts);
-          console.log("workouts fetched:", workoutValue.workouts);
-        }
-        else {
+        } else {
           setWorkouts([]);
         }
       } catch (error) {
-        toast.error("Failed to fetch workout list:");
+        toast.error("Failed to fetch workout list");
         setWorkouts([]);
       }
     };
@@ -54,61 +48,57 @@ const DashboardUser = () => {
 
   return (
     <div className="container my-5">
-      <h1 className="text-center mb-4">User Dashboard</h1>
+      <h1 className="text-center mb-4 text-primary">User Dashboard</h1>
       {userData.map((user) => (
-        <div key={user._id} className="card p-4 shadow mb-4">
-          <img
-            src={user.image || "default-profile-pic.jpg"}
-            alt="Profile"
-            className="rounded-circle mx-auto d-block mb-3"
-            style={{ width: "150px", height: "150px", objectFit: "cover" }}
-          />
-          <h2 className="text-center">{user.firstName} {user.lastName}</h2>
-          <p className="text-center">{user.email}</p>
-          <p className="text-center">{user.role}</p>
+        <div key={user._id} className="card shadow-lg mb-4 rounded-lg">
+          <div className="card-body">
+            <div className="text-center">
+              <img
+                src={user.image || "default-profile-pic.jpg"}
+                alt="Profile"
+                className="rounded-circle mb-3"
+                style={{ width: "150px", height: "150px", objectFit: "cover" }}
+              />
+              <h3 className="fw-bold">{user.firstName} {user.lastName}</h3>
+              <p className="text-muted">{user.email}</p>
+              <p className="badge bg-secondary">{user.role}</p>
+            </div>
 
-          <div className="mt-3">
-            <h5 className="text-center">
-              Workouts Completed: {
-                workouts.filter(workout => String(workout?.user?._id) === String(user?._id)).length
-              }
-            </h5>
+            <div className="mt-4">
+              <h5 className="text-center mb-4">
+                Workouts: {
+                  workouts.filter(workout => String(workout?.user?._id) === String(user?._id)).length
+                }
+              </h5>
 
-            {workouts.filter(workout => String(workout.user?._id) === String(user._id)).length === 0 ? (
-              <p className="text-center text-muted">No workouts completed yet.</p>
-            ) : (
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Exercises</th>
-                    <th scope="col">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
+              {workouts.filter(workout => String(workout.user?._id) === String(user._id)).length === 0 ? (
+                <p className="text-center text-muted">No workouts completed yet.</p>
+              ) : (
+                <div className="timeline">
                   {workouts
                     .filter(workout => String(workout.user?._id) === String(user._id))
                     .map((workout) => (
-                      <tr key={workout._id}>
-                        <td>{workout.title}</td>
-                        <td>{workout.description}</td>
-                        <td>
-                          <ul>
+                      <div key={workout._id} className="timeline-item mb-4">
+                        <div className="timeline-marker"></div>
+                        <div className="timeline-content p-4 bg-light rounded">
+                          <h5>{workout.title}</h5>
+                          <p><strong>Description:</strong> {workout.description}</p>
+                          <h6>Exercises:</h6>
+                          <ul className="list-unstyled">
                             {workout.exercises.map((exercise, index) => (
                               <li key={index}>
-                                {exercise.name} - {exercise.sets} sets of {exercise.reps} reps
-                                {exercise.weight ? ` (Weight: ${exercise.weight} kg)` : ''}
+                                <strong>{exercise.name}</strong>: {exercise.sets} sets x {exercise.reps} reps
+                                {exercise.weight && ` (Weight: ${exercise.weight} kg)`}
                               </li>
                             ))}
                           </ul>
-                        </td>
-                        <td>{new Date(workout.createdAt).toLocaleDateString()}</td>
-                      </tr>
+                          <p className="text-muted">Date: {new Date(workout.createdAt).toLocaleDateString()}</p>
+                        </div>
+                      </div>
                     ))}
-                </tbody>
-              </table>
-            )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       ))}
