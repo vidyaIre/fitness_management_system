@@ -1,7 +1,31 @@
-import React from 'react';
-import logo from '../assets/images/logo.jpg';
+import React, { useState, useEffect } from 'react';
 
 const Navbar = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
+  useEffect(() => {
+    const token = localStorage.getItem("@token");
+    const user = localStorage.getItem("@user");
+    console.log("user", user);
+    if (token && user) {
+      const logedUser = JSON.parse(user);
+      setIsLoggedIn(true);
+      setUserName(logedUser.firstName);
+    } else {
+      setIsLoggedIn(false);
+      setUserName('');
+    }
+  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem("@token");
+    localStorage.removeItem("@user");
+    setIsLoggedIn(false);
+  };
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  console.log("Hi:", userName);
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
       <div className="container-fluid">
@@ -78,7 +102,7 @@ const Navbar = () => {
               </ul>
             </li>
           </ul>
-          <form className="d-flex ms-auto" role="search">
+          {/* <form className="d-flex ms-auto" role="search">
             <input
               className="form-control me-2"
               type="search"
@@ -86,18 +110,30 @@ const Navbar = () => {
               aria-label="Search"
             />
             <button className="btn btn-outline-success" type="submit">Search</button>
-          </form>
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <a className="nav-link text-white" href="/Pages/Login">
-                Login
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link text-white" href="/Pages/Register">
-                Register
-              </a>
-            </li>
+          </form> */}
+          <ul className="navbar-nav ms-3">
+            {!isLoggedIn ? (
+              <>
+                <li className="nav-item">
+                  <a className="nav-link text-white" href="/Pages/Login">Login</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link text-white" href="/Pages/Register">Register</a>
+                </li>
+              </>
+            ) : (
+              <>
+              <li className="nav-item">
+                <a className="nav-link text-white" href="/Pages/Profile">Welcome, {userName}</a>
+              </li>
+
+              <li className="nav-item">
+                <button className="btn btn-outline-danger" onClick={handleLogout}>
+                  Logout
+                </button>
+              </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

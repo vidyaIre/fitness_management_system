@@ -15,76 +15,93 @@ import Sessions from '../Pages/Sessions';
 import DashboardTrainer from '../Pages/DashboardTrainer';
 import VerifyOtp from '../Pages/verifyOtp';
 import DashboardUser from '../Pages/DashboardUser';
+import DashboardAdmin from '../Pages/DashboardAdmin';
+import ViewUser from '../Pages/ViewUser';
+import EditUser from '../Pages/EditUser';
 
 const isAuth = () => {
-const token = localStorage.getItem('@token');
-const user = localStorage.getItem('@user');
-if(token && user) return true;
-return false;
+    const token = localStorage.getItem('@token');
+    const user = localStorage.getItem('@user');
+    if (token && user) return true;
+    return false;
 };
 
- const ProtecterRoute = ({element}) => {
- return isAuth() ? element : <Navigate to = "../Pages/Home"/>;
- };
+const ProtecterRoute = ({ element }) => {
+    return isAuth() ? element : <Navigate to="../Pages/Home" />;
+};
 
 const userRoutes = createBrowserRouter([
-     {
-         path:"/",
-         element:<Home/>
-     },
     {
-        path:"/Pages/Login",
-        element:<Login/>
+        path: "/",
+        element: <Home />
     },
     {
-        path:"/Pages/Register",
-        element:<Register/>
+        path: "/Pages/Login",
+        element: <Login />
     },
     {
-        path:"/Pages/Users",
-        element:<ProtecterRoute element={<Users/>}/>
+        path: "/Pages/Register",
+        element: <Register />
     },
     {
-        path:"/Pages/Workouts",
-        element:<ProtecterRoute element={<Workouts/>}/>
+        path: "/Pages/Users",
+        element: <ProtecterRoute element={<Users />} />
     },
     {
-        path:"/Pages/Nutrition",
-        element:<ProtecterRoute element={<Nutrition/>}/>
-    },
-     {
-        path:"/Pages/Sessions",
-        element:<ProtecterRoute element={<Sessions/>}/>
+        path: "/Pages/Workouts",
+        element: <ProtecterRoute element={<Workouts />} />
     },
     {
-        path:"/Pages/CreateWorkout",
-        element:<ProtecterRoute element={<CreateWorkout/>}/>
-    }, 
-    {
-        path:"/Pages/CreateNutrition",
-        element:<ProtecterRoute element={<CreateNutrition/>}/>
+        path: "/Pages/Nutrition",
+        element: <ProtecterRoute element={<Nutrition />} />
     },
     {
-        path:"/Pages/CreateSession",
-        element:<ProtecterRoute element={<CreateSession/>}/>
+        path: "/Pages/Sessions",
+        element: <ProtecterRoute element={<Sessions />} />
     },
     {
-        path:"/Pages/DashboardTrainer",
-        element:<ProtecterRoute element={<DashboardTrainer/>}/>
+        path: "/Pages/CreateWorkout",
+        element: <ProtecterRoute element={<CreateWorkout />} />
     },
     {
-        path:"/Pages/verifyOtp",
-        element:<ProtecterRoute element={<VerifyOtp/>}/>
+        path: "/Pages/CreateNutrition",
+        element: <ProtecterRoute element={<CreateNutrition />} />
     },
     {
-        path:"/Pages/DashboardUser",
-        element:<ProtecterRoute element={<DashboardUser/>}/>
+        path: "/Pages/CreateSession",
+        element: <ProtecterRoute element={<CreateSession />} />
     },
     {
-         path: "*",
-         element:<NotFound/>
-     }
-]) 
+        path: "/Pages/DashboardTrainer",
+        element: <ProtecterRoute element={<DashboardTrainer />} />
+    },
+    {
+        path: "/Pages/verifyOtp",
+        element: <ProtecterRoute element={<VerifyOtp />} />
+    },
+    {
+        path: "/Pages/DashboardUser",
+        element: <ProtecterRoute element={<DashboardUser />} />
+    },
+    
+    {
+        path: "/Pages/DashboardAdmin",
+        element: <ProtecterRoute element={<DashboardAdmin />} />
+    },
+   
+    {
+        path: "/Pages/ViewUser/:id",
+        element: <ProtecterRoute element={<ViewUser />} />
+    },
+    {
+        path: "/Pages/EditUser/:id",
+        element: <ProtecterRoute element={<EditUser />} />
+    },
+{
+    path: "*",
+        element: <NotFound />
+}
+])
 
 
 export default userRoutes;

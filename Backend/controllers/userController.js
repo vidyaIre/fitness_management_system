@@ -45,7 +45,7 @@ exports.registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const cloudinaryImage =req.file ?await imageUpload(req.file.path):null;
+        const cloudinaryImage = req.file ? await imageUpload(req.file.path) : null;
 
         const gotp = generateOtp();
 
@@ -55,12 +55,12 @@ exports.registerUser = async (req, res) => {
             email,
             password: hashedPassword,
             role,
-            image:cloudinaryImage,
+            image: cloudinaryImage,
             age,
             gender,
-            otp:gotp,
-            otpExpiry:Date.now() + 5 * 60 * 1000,
-            isVerified:false
+            otp: gotp,
+            otpExpiry: Date.now() + 5 * 60 * 1000,
+            isVerified: false
         });
         if (role === 'user') {
             newUserData.phone = phone;
@@ -105,9 +105,9 @@ exports.registerUser = async (req, res) => {
                 specialization: newUser?.specialization,
                 experience: newUser?.experience,
                 certification: newUser?.certification,
-                otp:newUser?.otp,
-                otpExpiry:newUser?.otpExpiry,
-                isVerified:newUser?.isVerified
+                otp: newUser?.otp,
+                otpExpiry: newUser?.otpExpiry,
+                isVerified: newUser?.isVerified
 
 
             },
@@ -125,9 +125,19 @@ exports.registerUser = async (req, res) => {
 };
 // Login a user
 exports.loginUser = async (req, res) => {
-    const { email, password } = req.body;
+   
     try {
+        const { email, password } = req.body;
+        console.log("Emal & password:", email, password);
+        if (!email || !password) {
+            return res.status(400).json({   
+                success: false,
+                statusCode: 400,
+                message: "Please provide email and password"
+            });
+        }
         const user = await User.findOne({ email });
+        console.log("user is:", user);
         if (!user) {
             return res.status(400).json({
                 success: false,
@@ -202,9 +212,10 @@ exports.getUserAll = async (req, res) => {
 // Get a single user by ID
 exports.getUserById = async (req, res) => {
     const { id } = req.body;
-    //console.log("id:", id);
+    console.log("req:", id);
     try {
         const user = await User.findById(id);
+        console.log("Found user : ", user);
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -229,8 +240,26 @@ exports.getUserById = async (req, res) => {
 };
 // Update a user
 exports.updateUser = async (req, res) => {
-    const { id, firstName, lastName, email, password, phone, role } = req.body;
-    console.log("data is:", firstName, lastName, email, password, phone, role);
+    const { id } = req.body;
+    const { 
+        firstName,
+        lastName,
+        email,
+        password,
+        phone,
+        role,
+        image,
+        age,
+        gender,
+        weight,
+        height,
+        goal,
+        memberShip,
+        specialization,
+        experience,
+        certification } = req.body;
+    console.log("id is:", id);
+    console.log("data:", firstName, lastName, email, password, phone, role, image, age, gender, weight, height, goal, memberShip, specialization, experience, certification);
     try {
         const user = await User.findById(id);
         if (!user) {
@@ -246,6 +275,18 @@ exports.updateUser = async (req, res) => {
         user.password = password ? await bcrypt.hash(password, 10) : user.password;
         user.phone = phone || user.phone;
         user.role = role || user.role;
+        user.age = age || user.age;
+        user.image = image || user.image;
+        user.gender = gender || user.gender;
+        user.weight = weight || user.weight;
+        user.height = height || user.height;
+        user.goal = goal || user.goal;
+        user.memberShip = memberShip || user.memberShip;
+        user.specialization = specialization || user.specialization;
+        user.experience = experience || user.experience;
+        user.certification = certification || user.certification;
+
+        
 
         await user.save();
 
@@ -267,7 +308,8 @@ exports.updateUser = async (req, res) => {
 // Delete a user
 exports.deleteUser = async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id } = req.query;
+        console.log("id is:", id);
         const user = await User.findById(id);
         console.log("user is:", user);
         if (!user) {
@@ -297,34 +339,34 @@ exports.deleteUser = async (req, res) => {
 exports.verifyOtp = async (req, res) => {
     console.log("email verification");
     try {
-       
-      const { email, otp } = req.body;
-  
-      const user = await User.findOne({ email });
-      if (!user) return res.status(400).json({ message: 'User not found' });
-  
-      if (user.isVerified) return res.status(400).json({ message: 'User already verified' });
-  
-      if (user.otp !== String(otp)){
-        return res.status(400).json({ message: 'Invalid OTP' });
-      }
-  
-      if (user.otpExpiry < new Date()) {
-        return res.status(400).json({ message: 'OTP expired' });
-      }
-  
-      user.isVerified = true;
-      user.otp = undefined;
-      user.otpExpiry = undefined;
-      await user.save();
-  
-      res.status(200).json({ success: true, message: "User verified successfully" });
-  
+
+        const { email, otp } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ message: 'User not found' });
+
+        if (user.isVerified) return res.status(400).json({ message: 'User already verified' });
+
+        if (user.otp !== String(otp)) {
+            return res.status(400).json({ message: 'Invalid OTP' });
+        }
+
+        if (user.otpExpiry < new Date()) {
+            return res.status(400).json({ message: 'OTP expired' });
+        }
+
+        user.isVerified = true;
+        user.otp = undefined;
+        user.otpExpiry = undefined;
+        await user.save();
+
+        res.status(200).json({ success: true, message: "User verified successfully" });
+
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, message: "Server error" });
-      localStorage.clear();
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error" });
+        localStorage.clear();
     }
-  };
-  
+};
+
 

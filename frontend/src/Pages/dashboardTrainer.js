@@ -135,8 +135,8 @@ const DashboardTrainer = () => {
                       alt={`${trainer.firstName} ${trainer.lastName}`}
                       className="img-fluid rounded-circle border border-4 border-light shadow-sm"
                       style={{
-                        width: "90px", // Adjusted size for better visibility
-                        height: "90px", // Adjusted size for better visibility
+                        width: "80px", // Adjusted size for better visibility
+                        height: "100px", // Adjusted size for better visibility
                         objectFit: "cover",
                       }}
                     />

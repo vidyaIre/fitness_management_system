@@ -14,7 +14,9 @@ const navigate = useNavigate();
 
 useEffect(() => {
     const token = localStorage.getItem("@token");
+    console.log("first token is:", token);
     const user = localStorage.getItem("@user");
+    console.log("user is:", user);
     if (token && user ) {
         navigate("/Pages/Users");
         toast.info("you are already logged in");
@@ -31,7 +33,7 @@ useEffect(() => {
 []);
 
 
-const isValid = () => {
+const isValid = (email,password) => {
     if(email && password && email.trim().length > 0 && password.trim().length > 0){
       const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return pattern.test(email);
@@ -45,11 +47,11 @@ const handleSubmit = async (event) => {
     event.preventDefault();
     email.trim();
     password.trim();
-    if(isValid()){
+    if(isValid(email.trim(),password.trim())){
         console.log("email from login:", email);
         console.log("password from login:", password);
         try {
-            const response = await loginUser({email:email, password:password});
+            const response = await loginUser({email:email.trim(), password:password.trim()});
             console.log("response is:", response);
             if(response?.success){
                 toast.success("login successfully");
