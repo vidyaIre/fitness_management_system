@@ -1,12 +1,12 @@
 const express = require('express');
-const { createPayment, getAllPayments, getPaymentById,updatePaymentStatus, deletePayment } = require('../controllers/paymentController');
+const Stripe = require('stripe');
+const {createPayment, recordPayment } = require('../controllers/paymentController');
 const router = express.Router();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 router.post('/createPayment', createPayment);
-router.get('/getAllPayments', getAllPayments);
-router.get('/getPaymentById', getPaymentById);
-router.put('/updatePaymentStatus', updatePaymentStatus);
-router.delete('/deletePayment', deletePayment);
+router.post('/recordPayment', recordPayment);
+
 
 
 module.exports = router;

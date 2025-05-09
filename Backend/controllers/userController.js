@@ -211,8 +211,8 @@ exports.getUserAll = async (req, res) => {
 };
 // Get a single user by ID
 exports.getUserById = async (req, res) => {
-    const { id } = req.body;
-    console.log("req:", id);
+    const { id } = req.params;
+    console.log("id is:", id);
     try {
         const user = await User.findById(id);
         console.log("Found user : ", user);
@@ -240,7 +240,8 @@ exports.getUserById = async (req, res) => {
 };
 // Update a user
 exports.updateUser = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.query;
+    console.log("id from updateuserin backend:", id);
     const { 
         firstName,
         lastName,
@@ -258,7 +259,6 @@ exports.updateUser = async (req, res) => {
         specialization,
         experience,
         certification } = req.body;
-    console.log("id is:", id);
     console.log("data:", firstName, lastName, email, password, phone, role, image, age, gender, weight, height, goal, memberShip, specialization, experience, certification);
     try {
         const user = await User.findById(id);

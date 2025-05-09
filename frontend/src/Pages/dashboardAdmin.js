@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getUserAll,deleteUser } from '../apiUtils/userApi'; // Make sure deleteUserById exists
-
+import {Link} from 'react-router-dom';
 const DashboardAdmin = () => {
   const [userData, setUserData] = useState([]);
 
@@ -83,8 +83,8 @@ const DashboardAdmin = () => {
               </div>
 
               <div className="d-flex justify-content-between">
-                <a href={`/Pages/ViewUser/${user._id}`} className="btn btn-info btn-sm">View</a>
-                <a href={`/Pages/EditUser/${user._id}`} className="btn btn-warning btn-sm">Edit</a>
+                <Link to ={`/Pages/ViewUser/${user._id}`} className="btn btn-info btn-sm">View</Link>
+                <Link to={`/Pages/EditUser/${user._id}`} className="btn btn-warning btn-sm">Edit</Link>
                 { <button
                   onClick={() => handleDelete(user._id, user.firstName)}
                   className="btn btn-danger btn-sm"

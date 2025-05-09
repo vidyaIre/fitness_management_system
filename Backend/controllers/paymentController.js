@@ -1,153 +1,120 @@
-const payment = require('../models/paymentModel');
+const Payment = require('../models/paymentModel');
+const User = require('../models/userModel');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 
 // Create a new payment
 exports.createPayment = async (req, res) => {
-    const { user, amount, paymentMethod } = req.body;
-    console.log("data received:", req.body);
-
     try {
-        const newPayment = new payment({
-            user,
+        const {
+            userId,
             amount,
             paymentMethod
+        } = req.body;
+        console.log("user is:", userId);
+        console.log("amount is:", amount);
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: amount * 100, // Amount in cents
+            currency: 'inr',
+            metadata: {
+                integration_check: 'accept_a_payment',
+                userId: userId,
+                paymentMethod: paymentMethod
+            }
+        });
+        console.log("Payment Intent created:", paymentIntent);
+        const payment = new Payment({
+            user: userId,
+            amount: amount,
+            paymentMethod: paymentMethod,
+            transactionId: paymentIntent.id,
+            paymentStatus: 'pending'
+        });
+        const savedPayment = await payment.save();
+        console.log("Payment saved successfully:", savedPayment);
+        return res.status(200).json({
+            statusCode: 200,
+            success: true,
+            clientSecret: payment.client_secret,
+            paymentId: payment.id,
+            message: 'Payment created successfully',
         });
 
-        await newPayment.save();
+    } catch (error) {
+        console.error('Create Payment Error:', error);
+        res.status(500).json({
+            statusCode: 500,
+            success: false,
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+};
+
+exports.recordPayment = async (req, res) => {
+    try {
+        const {
+            userId,
+            amount,
+            paymentIntentId
+        } = req.body;
+
+        console.log("Incoming request body:", req.body);
+
+        if (!userId || !amount || !paymentIntentId) {
+            return res.status(400).json({ 
+            statusCode: 400,
+            success: false,
+            message: 'Missing required fields',
+            
+         });
+        }
+        const existingPayment = await Payment.findOne({ transactionId: paymentIntentId });
+        if (existingPayment) {
+            if (existingPayment.paymentStatus === 'completed') {
+                return res.status(400).json({
+                    statusCode: 400,
+                    success: false,
+                    message: 'Payment already recorded',
+                    payment: existingPayment
+                });
+            }
+            existingPayment.paymentStatus = 'completed';
+            const updatedPayment = await existingPayment.save();
+            console.log("Payment updated successfully:", updatedPayment);
+            return res.status(200).json({
+                statusCode: 200,
+                success: true,
+                message: 'Payment updated successfully',
+                payment: updatedPayment
+            });
+        }
+        const newPayment = new Payment({
+            user: userId,
+            amount,
+            paymentMethod: 'stripe',
+            transactionId: paymentIntentId,
+            paymentStatus: 'completed'
+        });
+
+        const savedPayment = await newPayment.save();
+        console.log("Payment saved successfully:", savedPayment);
 
         res.status(201).json({
-            success: true,
             statusCode: 201,
-            message: "Payment created successfully",
-            payment: newPayment
-        });
-
-    } catch (error) {
-        console.error("Error creating payment:", error);
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            message: "Internal server error",
-            error: error.message
-        });
-    }
-};
-// Get all payments
-exports.getAllPayments = async (req, res) => {
-    try {
-        const payments = await payment.find().populate('user', 'name email');
-        res.status(200).json({
             success: true,
-            statusCode: 200,
-            count: payments.length,
-            message: "Payments retrieved successfully",
-            data:payments
+            message: 'Payment recorded successfully',
+            payment: savedPayment
         });
-    } catch (error) {
-        console.error("Error retrieving payments:", error);
+    } catch (err) {
+        console.error('Error recording payment:', err);
         res.status(500).json({
-            success: false,
             statusCode: 500,
-            message: "Internal server error",
-            error: error.message
+            success: false,
+            error: 'Failed to record payment',
+            details: err.message
         });
     }
-};
-// Get a single payment by ID
-exports.getPaymentById = async (req, res) => {
-    const { id } = req.body;
-    console.log("id received:", id);
-    try {
-        const paymentData = await payment.findById(id);
-        if (!paymentData) {
-            return res.status(404).json({
-                success: false,
-                statusCode: 404,
-                message: "Payment not found"
-            });
-        }
-        res.status(200).json({
-            success: true,
-            statusCode: 200,
-            message: "Payment retrieved successfully",
-            payment: paymentData
-        });
 
-    }catch (error) {
-        console.error("Error retrieving payment:", error);
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            message: "Internal server error",
-            error: error.message
-        });
-    }
-        
 };
-// Update a payment status
-exports.updatePaymentStatus = async (req, res) => {
-    const { id, status } = req.body;
-    console.log("data received:", req.body);
-    try {
-        const updatedPayment = await payment.findByIdAndUpdate(
-            id,
-            { status },
-            { new: true }
-        );
-        if (!updatedPayment) {
-            return res.status(404).json({
-                success: false,
-                statusCode: 404,
-                message: "Payment not found"
-            });
-        }
-        res.status(200).json({
-            success: true,
-            statusCode: 200,
-            message: "Payment status updated successfully",
-            payment: updatedPayment
-        });
 
-    } catch (error) {
-        console.error("Error updating payment status:", error);
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            message: "Internal server error",
-            error: error.message
-        });
-    }
-};
-//delete a payment by soft delete
-exports.deletePayment = async (req, res) => {
-    const { id } = req.body;
-    console.log("id received:", id);
-    try {
-        const deletedPayment = await payment.findByIdAndUpdate(
-            id,
-            { isDeleted: true },
-            { new: true }
-        );
-        if (!deletedPayment) {
-            return res.status(404).json({
-                success: false,
-                statusCode: 404,
-                message: "Payment not found"
-            });
-        }
-        res.status(200).json({
-            success: true,
-            statusCode: 200,
-            message: "Payment deleted successfully",
-            payment: deletedPayment
-        });
-
-    } catch (error) {
-        console.error("Error deleting payment:", error);
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            message: "Internal server error",
-            error: error.message
-        });
-    }
-}

@@ -68,9 +68,11 @@ const ViewUser = () => {
               <>
                 <h5 className="mb-3">User Fitness Info</h5>
                 <ul className="list-group list-group-flush">
+                <li className="list-group-item"><strong>Contact:</strong> {user?.phone || 'N/A'}</li>
                   <li className="list-group-item"><strong>Height:</strong> {user?.height} cm</li>
                   <li className="list-group-item"><strong>Weight:</strong> {user?.weight} kg</li>
                   <li className="list-group-item"><strong>Goal:</strong> {user?.goal}</li>
+                  <li className="list-group-item"><strong>Membership:</strong> {user?.memberShip || 'N/A'}</li>
                 </ul>
               </>
             )}

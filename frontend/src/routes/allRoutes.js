@@ -18,16 +18,29 @@ import DashboardUser from '../Pages/DashboardUser';
 import DashboardAdmin from '../Pages/DashboardAdmin';
 import ViewUser from '../Pages/ViewUser';
 import EditUser from '../Pages/EditUser';
+import MembershipPlans from '../Pages/MemberShipplans';
+import Payments from '../Pages/Payments';
 
 const isAuth = () => {
     const token = localStorage.getItem('@token');
-    const user = localStorage.getItem('@user');
-    if (token && user) return true;
-    return false;
+    const user = (localStorage.getItem('@user')) ? JSON.parse(localStorage.getItem('@user')) : null;
+    if (token && user) return user;
+    return null;
 };
 
 const ProtecterRoute = ({ element }) => {
-    return isAuth() ? element : <Navigate to="../Pages/Home" />;
+    return isAuth() ? element : <Navigate to="/Pages/Home" />;
+};
+const ProtecterRoleRoute = ({ element, allowedRole }) => {
+const user = isAuth();
+
+    if (!user) {
+        return <Navigate to="/Pages/Home" />;
+    }
+    if (!allowedRole.includes(user.role)) {
+        return <Navigate to="/Pages/NotFound" />;
+    }
+    return element;
 };
 
 const userRoutes = createBrowserRouter([
@@ -44,8 +57,16 @@ const userRoutes = createBrowserRouter([
         element: <Register />
     },
     {
+        path:"/Pages/MembershipPlans",
+        element:<MembershipPlans/>
+    },
+    {
+        path:"/Pages/Payments",
+        element:<Payments/>
+    },
+    {
         path: "/Pages/Users",
-        element: <ProtecterRoute element={<Users />} />
+        element: <ProtecterRoute element={<Users />}  />
     },
     {
         path: "/Pages/Workouts",
@@ -73,7 +94,7 @@ const userRoutes = createBrowserRouter([
     },
     {
         path: "/Pages/DashboardTrainer",
-        element: <ProtecterRoute element={<DashboardTrainer />} />
+        element: <ProtecterRoleRoute element={<DashboardTrainer />} allowedRole={['trainer']} />
     },
     {
         path: "/Pages/verifyOtp",
@@ -81,12 +102,12 @@ const userRoutes = createBrowserRouter([
     },
     {
         path: "/Pages/DashboardUser",
-        element: <ProtecterRoute element={<DashboardUser />} />
+        element: <ProtecterRoleRoute element={<DashboardUser />}allowedRole={['user']} />
     },
     
     {
         path: "/Pages/DashboardAdmin",
-        element: <ProtecterRoute element={<DashboardAdmin />} />
+        element: <ProtecterRoleRoute element={<DashboardAdmin />} allowedRole={['admin']}/>
     },
    
     {

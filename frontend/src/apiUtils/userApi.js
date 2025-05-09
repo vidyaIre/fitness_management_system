@@ -71,7 +71,7 @@ export const getUserById = async (id) => {
             console.log("No token found in local storage.");
             throw new Error("No token found in local storage.");
         }
-        const result = await axiosInstance.get('/user/getUserById', {id}, {
+        const result = await axiosInstance.get(`/user/getUserById/${id}`, {
           
             headers: {
                 Authorization: `Bearer ${token}`
@@ -85,6 +85,8 @@ export const getUserById = async (id) => {
     }
 };
 export const updateUser = async (id, payload) => {  
+    console.log("payload is:", payload);
+    console.log("id is:", id);
     try {
         let token = localStorage.getItem("@token");
         if(token){

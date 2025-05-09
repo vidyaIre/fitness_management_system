@@ -3,14 +3,17 @@ import React, { useState, useEffect } from 'react';
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
   useEffect(() => {
     const token = localStorage.getItem("@token");
     const user = localStorage.getItem("@user");
+    console.log("token", token);
     console.log("user", user);
     if (token && user) {
       const logedUser = JSON.parse(user);
       setIsLoggedIn(true);
       setUserName(logedUser.firstName);
+      setUserRole(logedUser.role);
     } else {
       setIsLoggedIn(false);
       setUserName('');
@@ -68,15 +71,18 @@ const Navbar = () => {
                 Dashboard
               </a>
               <ul className="dropdown-menu">
-                <li>
-                  <a className="dropdown-item" href="/Pages/DashboardUser">User</a>
-                </li>
+                {userRole === 'user' && (
+                  <li>
+                    <a className="dropdown-item" href="/Pages/DashboardUser">User</a>
+                  </li>)}
+                  {userRole === 'trainer' && (
                 <li>
                   <a className="dropdown-item" href="/Pages/DashboardTrainer">Trainer</a>
-                </li>
+                </li>)}
+                {userRole === 'admin' && (
                 <li>
                   <a className="dropdown-item" href="/Pages/DashboardAdmin">Admin</a>
-                </li>
+                </li>)}
               </ul>
             </li>
             <li className="nav-item dropdown">
@@ -101,6 +107,18 @@ const Navbar = () => {
                 </li>
               </ul>
             </li>
+            <li className="nav-item">
+              <a className="nav-link active text-white" aria-current="page" href="/Pages/Users">
+
+                Active members
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link active text-white" aria-current="page" href="/Pages/MembershipPlans">
+
+               Plans
+              </a>
+            </li>
           </ul>
           {/* <form className="d-flex ms-auto" role="search">
             <input
@@ -123,15 +141,15 @@ const Navbar = () => {
               </>
             ) : (
               <>
-              <li className="nav-item">
-                <a className="nav-link text-white" href="/Pages/Profile">Welcome, {userName}</a>
-              </li>
+                <li className="nav-item">
+                  <a className="nav-link text-white" href="/Pages/Profile">Welcome, {userName}</a>
+                </li>
 
-              <li className="nav-item">
-                <button className="btn btn-outline-danger" onClick={handleLogout}>
-                  Logout
-                </button>
-              </li>
+                <li className="nav-item">
+                  <button className="btn btn-outline-danger" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </li>
               </>
             )}
           </ul>

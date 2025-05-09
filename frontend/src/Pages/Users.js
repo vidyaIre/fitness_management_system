@@ -52,7 +52,7 @@ const Users = () => {
                                 <th>Last Name</th>
                                 <th>Email</th>
                                 <th>Role</th>
-                                <th>Function</th>
+                                {/* <th>Function</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -64,12 +64,12 @@ const Users = () => {
                                             <td>{users?.lastName}</td>
                                             <td>{users?.email}</td>
                                             <td>{users?.role}</td>
-                                            <td>
+                                            {/* <td>
                                                 <button className="btn btn-success">View</button>
                                                 <button className="btn btn-primary">Edit</button>
                                                 <button className="btn btn-danger">Delete</button>
 
-                                            </td>
+                                            </td> */}
                                         </tr>
 
                                     )) : <></>

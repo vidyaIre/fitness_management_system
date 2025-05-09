@@ -7,21 +7,8 @@ const EditUser = () => {
   const { id } = useParams();
   console.log("id is:", id);
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    // firstName: '',
-    // lastName: '',
-    // email: '',
-    // role: '',
-    // age: '',
-    // specialization: '',
-    // experience: '',
-    // certification: '',
-    // weight: '',
-    // height: '',
-    // goal: '',
-    // memberShip: '',
-    // phone: '',
-  });
+  const [formData, setFormData] = useState({});
+  const [newPassword, setNewPassword] = useState('');
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,25 +16,7 @@ const EditUser = () => {
         const res = await getUserById(id);
         console.log("res is:", res);
         if (res?.user && res?.success) {
-          setFormData(
-            //{
-            // firstName: res.user.firstName || '',
-            // lastName: res.user.lastName || '',
-            // email: res.user.email || '',
-            // role: res.user.role || '',
-            // age: res.user.age || '',
-            // specialization: res.user.specialization || '',
-            // experience: res.user.experience || '',
-            // certification: res.user.certification || '',
-            // weight: res.user.weight || '',
-            // height: res.user.height || '',
-            // goal: res.user.goal || '',
-            // memberShip: res.user.memberShip || '',
-            // phone: res.user.phone || '',
-           
-          //}
-          res.user)
-          ;
+          setFormData( res.user);
           toast.success("User loaded successfully");
         } else {
           toast.error("User not found");
@@ -65,8 +34,14 @@ const EditUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const updatedData = { ...formData };
+    if(newPassword.trim() !== '') {
+      updatedData.password = newPassword;
+    } else{
+      delete updatedData.password; 
+    }
     try {
-      await updateUser(id, formData);
+     await updateUser(id, updatedData);
       toast.success("User updated successfully");
       navigate('/Pages/DashboardAdmin');
     } catch (err) {
@@ -95,6 +70,16 @@ const EditUser = () => {
               />
             </div>
           ))}
+          <div className="col-md-6">
+            <label className="form-label">New Password (optional)</label>
+            <input
+              type="password"
+              className="form-control"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Leave blank to keep current password"
+            />
+          </div>
           <div className="col-12 mt-3">
             <button type="submit" className="btn btn-primary w-100">
               Update User

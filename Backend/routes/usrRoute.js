@@ -10,7 +10,7 @@ router.post('/registerUser',upload.single('image'), registerUser);
 router.post('/verifyOtp',verifyOtp);
 router.post('/loginUser', loginUser);
 router.get('/getUserAll',authMiddleware, getUserAll);
-router.get('/getUserById',authMiddleware,roleMiddleware("admin", "trainer"), getUserById);
+router.get('/getUserById/:id',authMiddleware,roleMiddleware("admin", "trainer"), getUserById);
 router.put('/updateUser', authMiddleware,roleMiddleware("admin", "trainer"), updateUser);
 router.delete('/deleteUser',authMiddleware,roleMiddleware("admin"), deleteUser);
 

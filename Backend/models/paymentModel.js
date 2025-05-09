@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const paymentSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -9,16 +10,40 @@ const paymentSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    paymentDate: {
+    paymentMethod: {
+        type: String,
+        enum: ['credit_card','upi', 'debit_card','stripe'],
+        required: true
+    },
+    cardNumber: {
+        type: String,
+        required: function() {
+            return this.paymentMethod === 'credit_card' || this.paymentMethod === 'debit_card';
+        }
+    },
+    cardHolderName: {
+        type: String,
+        required: function() {
+            return this.paymentMethod === 'credit_card' || this.paymentMethod === 'debit_card';
+        }
+    },
+    expiryDate: {
+        type: String,
+        required: function() {
+            return this.paymentMethod === 'credit_card' || this.paymentMethod === 'debit_card';
+        }
+    },
+    upiId: {
+        type: String,
+        required: function() {
+            return this.paymentMethod === 'upi';
+        }
+    },
+    transactionDate: {
         type: Date,
         default: Date.now
     },
-    paymentMethod: {
-        type: String,
-        enum: ['credit_card', 'paypal', 'bank_transfer'],
-        required: true
-    },
-    status: {
+    paymentStatus: {
         type: String,
         enum: ['pending', 'completed', 'failed'],
         default: 'pending'
@@ -26,6 +51,10 @@ const paymentSchema = new mongoose.Schema({
     transactionId: {
         type: String,
         unique: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     },
     isActive: {
         type: Boolean,
