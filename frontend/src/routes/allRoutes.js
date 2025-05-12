@@ -20,7 +20,7 @@ import ViewUser from '../Pages/ViewUser';
 import EditUser from '../Pages/EditUser';
 import MembershipPlans from '../Pages/MemberShipPlans';
 import Payments from '../Pages/Payments';
-import UserOnly from '../Pages/userOnly';
+import UserOnly from '../Pages/UserOnly';
 
 const isAuth = () => {
     const token = localStorage.getItem('@token');

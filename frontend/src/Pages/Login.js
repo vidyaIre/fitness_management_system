@@ -71,7 +71,8 @@ const Login = () => {
           //navigate("/Pages/Users");
           const { role } = response?.user;
           if (role === 'user') {
-            navigate("/Pages/DashboardUser");
+            //navigate("/Pages/DashboardUser");
+            navigate("/Pages/UserOnly");
           } else if (role === 'admin') {
             navigate("/Pages/DashboardAdmin");
           } else if (role === 'trainer') {
