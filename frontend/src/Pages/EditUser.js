@@ -57,7 +57,7 @@ const EditUser = () => {
           {[
             "firstName", "lastName", "email", "phone", "age", "gender",
             "role", "specialization", "experience", "certification",
-            "weight", "height", "goal", "memberShip"
+            "weight", "height", "goal", "memberShip", "paymentStatus",
           ].map((field) => (
             <div className="col-md-6" key={field}>
               <label className="form-label text-capitalize">{field}</label>

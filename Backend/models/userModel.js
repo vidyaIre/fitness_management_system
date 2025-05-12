@@ -54,6 +54,11 @@ const userSchema = new mongoose.Schema({
         enum: ['basic', 'premium', 'pro'],
 
     },
+    paymentStatus: {
+        type: String,
+        enum: ['paid', 'unpaid'],
+        default: 'unpaid'
+    },
 
     //Trainer specific fields
     specialization: {

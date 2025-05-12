@@ -22,7 +22,8 @@ const Login = () => {
       toast.info("you are already logged in");
 
       if (user.role === 'user') {
-        navigate("/Pages/DashboardUser");
+        //navigate("/Pages/DashboardUser");
+        navigate("/Pages/UserOnly");
       }
       else if (user.role === 'admin') {
         navigate("/Pages/DashboardAdmin");

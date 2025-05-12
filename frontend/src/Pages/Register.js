@@ -23,6 +23,7 @@ function Register() {
     height: '',
     goal: '',
     memberShip: '',
+    paymentStatus: '',
     phone: '',
     otp:'',
     otpExpiry:'',
@@ -48,6 +49,7 @@ function Register() {
       payload.height = formData.height;
       payload.goal = formData.goal;
       payload.memberShip = formData.memberShip;
+      payload.paymentStatus = formData.paymentStatus;
       payload.phone = formData.phone;
     } else if (formData.role === "admin") {
       payload.phone = formData.phone;
@@ -224,6 +226,14 @@ function Register() {
                           <option value="basic">Basic</option>
                           <option value="premium">Premium</option>
                           <option value="pro">Pro</option>
+                        </select>
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor='paymentStatus' className='form-label'>Payment Status: </label>
+                        <select className="form-select" id="paymentStatus" name="paymentStatus" value={formData.paymentStatus} onChange={handleRegister}>
+                          <option value="">Select Payment Status</option>
+                          <option value="paid">Paid</option>
+                          <option value="unpaid">Unpaid</option>
                         </select>
                       </div>
 

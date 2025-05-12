@@ -61,7 +61,11 @@ const DashboardUser = () => {
               />
               <h3 className="fw-bold">{user.firstName} {user.lastName}</h3>
               <p className="text-muted">{user.email}</p>
-              <p className="badge bg-secondary">{user.role}</p>
+              <p className="text ">{user.role}</p>
+              <p className="badge bg-secondary">{user. memberShip}</p>
+              <p className="badge bg-secondary">{user.paymentStatus}</p>
+              <p className="badge bg-secondary">{user.age} years</p>
+              
             </div>
 
             <div className="mt-4">

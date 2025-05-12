@@ -22,6 +22,7 @@ exports.registerUser = async (req, res) => {
         height,
         goal,
         memberShip,
+        paymentStatus,
         specialization,
         experience,
         certification
@@ -29,7 +30,7 @@ exports.registerUser = async (req, res) => {
         // otpExpiry,
         // isVerified
     } = req.body;
-    console.log("data:", firstName, lastName, email, password, phone, role, image, age, gender, weight, height, goal, memberShip, specialization, experience, certification);
+    console.log("data:", firstName, lastName, email, password, phone, role, image, age, gender, weight, height, goal, memberShip, paymentStatus, specialization, experience, certification);
 
     try {
         const user = await User.findOne({ email });
@@ -68,6 +69,7 @@ exports.registerUser = async (req, res) => {
             newUserData.height = height;
             newUserData.goal = goal;
             newUserData.memberShip = memberShip;
+            newUserData.paymentStatus = paymentStatus;
         }
 
         if (role === 'trainer') {
@@ -102,6 +104,7 @@ exports.registerUser = async (req, res) => {
                 height: newUser?.height,
                 goal: newUser?.goal,
                 memberShip: newUser?.memberShip,
+                paymentStatus: newUser?.paymentStatus,
                 specialization: newUser?.specialization,
                 experience: newUser?.experience,
                 certification: newUser?.certification,
@@ -256,10 +259,11 @@ exports.updateUser = async (req, res) => {
         height,
         goal,
         memberShip,
+        paymentStatus,
         specialization,
         experience,
         certification } = req.body;
-    console.log("data:", firstName, lastName, email, password, phone, role, image, age, gender, weight, height, goal, memberShip, specialization, experience, certification);
+    console.log("data:", firstName, lastName, email, password, phone, role, image, age, gender, weight, height, goal, memberShip,paymentStatus, specialization, experience, certification);
     try {
         const user = await User.findById(id);
         if (!user) {
@@ -282,6 +286,7 @@ exports.updateUser = async (req, res) => {
         user.height = height || user.height;
         user.goal = goal || user.goal;
         user.memberShip = memberShip || user.memberShip;
+        user.paymentStatus = paymentStatus || user.paymentStatus;
         user.specialization = specialization || user.specialization;
         user.experience = experience || user.experience;
         user.certification = certification || user.certification;

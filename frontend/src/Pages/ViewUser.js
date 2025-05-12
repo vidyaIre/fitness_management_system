@@ -73,6 +73,7 @@ const ViewUser = () => {
                   <li className="list-group-item"><strong>Weight:</strong> {user?.weight} kg</li>
                   <li className="list-group-item"><strong>Goal:</strong> {user?.goal}</li>
                   <li className="list-group-item"><strong>Membership:</strong> {user?.memberShip || 'N/A'}</li>
+                  <li className="list-group-item"><strong>Payment Status:</strong> {user?.paymentStatus}</li>
                 </ul>
               </>
             )}

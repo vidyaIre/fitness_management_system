@@ -18,8 +18,9 @@ import DashboardUser from '../Pages/DashboardUser';
 import DashboardAdmin from '../Pages/DashboardAdmin';
 import ViewUser from '../Pages/ViewUser';
 import EditUser from '../Pages/EditUser';
-import MembershipPlans from '../Pages/MemberShipplans';
+import MembershipPlans from '../Pages/MemberShipPlans';
 import Payments from '../Pages/Payments';
+import UserOnly from '../Pages/userOnly';
 
 const isAuth = () => {
     const token = localStorage.getItem('@token');
@@ -67,6 +68,10 @@ const userRoutes = createBrowserRouter([
     {
         path: "/Pages/Users",
         element: <ProtecterRoute element={<Users />}  />
+    },
+    {
+      path: "/Pages/UserOnly",
+        element: <ProtecterRoute element={<UserOnly />} />  
     },
     {
         path: "/Pages/Workouts",

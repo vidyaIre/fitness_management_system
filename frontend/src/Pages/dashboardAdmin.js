@@ -71,6 +71,8 @@ const DashboardAdmin = () => {
                       <p className="mb-1"><strong>Weight:</strong> {user.weight} kg</p>
                       <p className="mb-1"><strong>Height:</strong> {user.height} cm</p>
                       <p className="mb-1"><strong>Goal:</strong> {user.goal}</p>
+                      <p className="mb-1"><strong>MemberShip:</strong> {user.memberShip}</p>
+                      <p className="mb-1"><strong>Payment Status:</strong> {user.paymentStatus}</p>
                     </div>
                   )}
                   {user.role === 'admin' && (
