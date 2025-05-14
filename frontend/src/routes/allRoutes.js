@@ -21,6 +21,9 @@ import EditUser from '../Pages/EditUser';
 import MembershipPlans from '../Pages/MemberShipPlans';
 import Payments from '../Pages/Payments';
 import UserOnly from '../Pages/UserOnly';
+import TrainerOnly from '../Pages/TrainerOnly';
+import AdminOnly from '../Pages/AdminOnly';
+import Admin from '../Pages/Admin';
 
 const isAuth = () => {
     const token = localStorage.getItem('@token');
@@ -72,6 +75,18 @@ const userRoutes = createBrowserRouter([
     {
       path: "/Pages/UserOnly",
         element: <ProtecterRoute element={<UserOnly />} />  
+    },
+    {
+        path: "/Pages/TrainerOnly",
+        element: <ProtecterRoute element={<TrainerOnly />} />
+    },
+    {
+        path: "/Pages/AdminOnly",
+        element: <ProtecterRoute element={<AdminOnly />} />
+    },
+    {
+        path: "/Pages/Admin",
+        element: <ProtecterRoute element={<Admin />} />
     },
     {
         path: "/Pages/Workouts",

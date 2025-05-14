@@ -26,10 +26,12 @@ const Login = () => {
         navigate("/Pages/UserOnly");
       }
       else if (user.role === 'admin') {
-        navigate("/Pages/DashboardAdmin");
+        //navigate("/Pages/DashboardAdmin");
+        navigate("/Pages/AdminOnly");
       }
       else if (user.role === 'trainer') {
-        navigate("/Pages/DashboardTrainer");
+        //navigate("/Pages/DashboardTrainer");
+        navigate("/Pages/TrainerOnly");
       }
 
     } else {
