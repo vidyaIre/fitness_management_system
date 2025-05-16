@@ -1,5 +1,9 @@
 const express = require('express');
-const Payment = require('./models/paymentModel');
+const mongoose = require('mongoose');
+const {Server} = require('socket.io');
+const http = require('http');
+
+//const Payment = require('./models/paymentModel');
 const dotenv = require('dotenv');
 
 const cors = require('cors');
@@ -7,6 +11,20 @@ const connectDB = require('./config/db');
 
 dotenv.config();
 const app = express();
+
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:3000', // Replace with your frontend URL
+        methods: ['GET', 'POST']
+    }
+});
+
+const Message = {
+   
+    text: String,
+    time :{type: Date, default: Date.now}
+};
 
 app.use(cors());
 app.use(express.json());
@@ -22,7 +40,25 @@ app.use('/api/nutrition', nutritionRoute);
 const sessionRoute = require('./routes/sessionRoute');
 app.use('/api/session', sessionRoute);
 const paymentRoute = require('./routes/paymentRoute');
+const { type } = require('os');
 app.use('/api/payment', paymentRoute);
+
+let chatHistory = [];
+io.on('connection', (socket) => {
+    console.log('user connected', socket.id);
+    
+    socket.on('sendMessage', async (message) => {
+        const newMessage =  new Message(message);
+        console.log('Message received:', message);
+        await newMessage.save();
+
+        io.emit('sendMessage', message);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
 
 
 
