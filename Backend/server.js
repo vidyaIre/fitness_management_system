@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const {Server} = require('socket.io');
+const { Server } = require('socket.io');
+const Message = require('./models/chatMsg');
 const http = require('http');
 
 //const Payment = require('./models/paymentModel');
@@ -13,23 +14,20 @@ dotenv.config();
 const app = express();
 
 const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: 'http://localhost:3000', // Replace with your frontend URL
-        methods: ['GET', 'POST']
-    }
-});
-
-const Message = {
-   
-    text: String,
-    time :{type: Date, default: Date.now}
-};
-
 app.use(cors());
 app.use(express.json());
 
 connectDB();
+
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000", // Replace with your frontend URL
+        methods: ["GET", "POST"]
+    }
+});
+
+
+
 
 const userRoute = require('./routes/usrRoute');
 app.use('/api/user', userRoute);
@@ -43,31 +41,45 @@ const paymentRoute = require('./routes/paymentRoute');
 const { type } = require('os');
 app.use('/api/payment', paymentRoute);
 
-let chatHistory = [];
+//let chatHistory = [];
 io.on('connection', (socket) => {
-    console.log('user connected', socket.id);
-    
-    socket.on('sendMessage', async (message) => {
-        const newMessage =  new Message(message);
-        console.log('Message received:', message);
-        await newMessage.save();
+    console.log('socket connected: ', socket.id);
 
-        io.emit('sendMessage', message);
+    socket.on('sendMessage', async (data) => {
+        console.log("Message data received:", data);
+       
+        try {
+             const newMessage = new Message(data);
+           const savedMessage = await newMessage.save();
+            console.log('Message saved to db :', savedMessage);
+            io.emit('receiveMessage',savedMessage);
+        } catch (error) {
+            console.error('Error saving message:', error);
+        }
     });
 
     socket.on('disconnect', () => {
-        console.log('Client disconnected');
+        console.log('Client disconnected:', socket.id);
     });
 });
 
 
 
-app.get('/', (req, res) => {
-    res.send('Fitness Management System is running....');
+app.get('/messages', async (req, res) => {
+    console.log('Fetching messages...');
+    try {
+        console.log("chat opening...");
+        const messages = await Message.find(); // Fetch the last 100 messages
+        console.log("message from chat", messages);
+        res.json(messages);
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        res.status(500).json({ error: 'Failed to fetch messages' });
+    }
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })
 // app.get('/test-payment', async (req, res) => {

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getUserById } from '../apiUtils/userApi';
 import { toast } from 'react-toastify';
 import UserCard from '../components/UserCard';
+import axios from 'axios';
+import CheckoutForm from '../components/CheckoutForm';
 
 const UserOnly = () => {
   const [userData, setUserData] = useState(null);
@@ -29,10 +31,13 @@ const UserOnly = () => {
         toast.error("Failed to load user data.");
         console.error("Error fetching user data:", error);
       }
-    };
+    }
 
     fetchUser();
-  }, []);
+  }, [])
+
+  
+  
 
   if (!userData) return <div className="text-center mt-5 text-muted">Loading user data...</div>;
 
@@ -53,7 +58,6 @@ const UserOnly = () => {
         </div>
 
         <hr />
-
         <div className="row">
           <div className="col-6 mb-2"><strong>Email:</strong><br />{userData.email}</div>
           <div className="col-6 mb-2"><strong>Phone:</strong><br />{userData.phone || 'N/A'}</div>
@@ -64,9 +68,16 @@ const UserOnly = () => {
           <div className="col-6 mb-2"><strong>Goal:</strong><br />{userData.goal || 'N/A'}</div>
           <div className="col-6 mb-2"><strong>Membership:</strong><br />{userData.memberShip || 'N/A'}</div>
           <div className="col-6 mb-2"><strong>Payment:</strong><br />
-            <span className={`badge bg-${userData.paymentStatus === 'Paid' ? 'success' : 'secondary'}`}>
+            {userData.paymentStatus === 'unpaid' ? (
+              <button className="btn btn-primary" onClick={CheckoutForm}>
+                Pay Now
+              </button>
+            ) : (
+              <span className="badge bg-success">Paid</span>
+            )}
+            {/* <span className={`badge bg-${userData.paymentStatus === 'Paid' ? 'success' : 'secondary'}`}>
               {userData.paymentStatus || 'N/A'}
-            </span>
+            </span> */}
           </div>
           <div className="col-6 mb-2"><strong>Joined:</strong><br />{new Date(userData.createdAt).toLocaleDateString()}</div>
         </div>

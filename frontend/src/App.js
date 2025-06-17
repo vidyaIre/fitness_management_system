@@ -9,14 +9,21 @@ import allRoutes from "./routes/allRoutes";
 import Header from './layouts/Header';
 import Footer from "./layouts/Footer";
 
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe("process.env.REACT_APP_STRIPE_PUBLISHED_KEY");
+
 
 
 function App() {
   return (
     <>
-   
-    <Header/>
-      <RouterProvider router={allRoutes} />
+      <Header />
+      <Elements stripe={stripePromise}>
+        <RouterProvider router={allRoutes} />
+
+      </Elements>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -29,13 +36,10 @@ function App() {
         pauseOnHover
         theme="dark"
         transition={Zoom} />
-         { <div className="App">
+         
         <ChatBox />
-        <h1>Fitness Management System</h1>
-        <h2>Welcome to the Fitness Management System</h2>
-        <p>Manage your workouts, nutrition, and sessions effectively.</p>
-        </div>
-      }
+       
+      
         <Footer/>
     </>
 
