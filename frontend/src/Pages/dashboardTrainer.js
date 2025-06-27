@@ -101,6 +101,7 @@ const DashboardTrainer = () => {
                     <th>User</th>
                     <th>Workout</th>
                     <th>Time</th>
+                    <th>Trainer</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -110,6 +111,7 @@ const DashboardTrainer = () => {
                       <td>{session.user?.firstName} {session.user?.lastName}</td>
                       <td>{session.workout?.title}</td>
                       <td>{session.time}</td>
+                      <td>{session.trainer?.firstName}</td>
                     </tr>
                   ))}
                 </tbody>

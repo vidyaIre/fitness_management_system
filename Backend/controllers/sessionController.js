@@ -181,4 +181,35 @@ exports.deleteSession = async (req, res) => {
             error: error.message
         });
     }
+};
+// Get all sessions by user ID
+exports.getAllSessionsByUserId = async (req, res) => {
+    const { id } = req.params;
+    console.log("user ID from session controller:", id);
+
+    try {
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                statusCode: 400,
+                message: "User ID is required"
+            });
+        }
+        const sessions = await session.find({ user: id }).populate('user trainer workout');
+        res.status(200).json({
+            success: true,
+            statusCode: 200,
+            count: sessions.length,
+            message: "Sessions retrieved successfully",
+            sessions
+        });
+    } catch (error) {
+        console.error("Error retrieving sessions by user ID:", error);
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: "Internal server error",
+            error: error.message
+        });
+    }
 }

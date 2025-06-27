@@ -111,8 +111,8 @@ exports.getAllNutrition = async (req, res) => {
 };
 // Get nutrition by user ID
 exports.getNutritionByUserId = async (req, res) => {
-    const { id } = req.body;
-    console.log("nutrition id:", id);
+    const { id } = req.params; // Assuming the ID is passed as a URL parameter
+    console.log("nutrition id from nutrition controller:", id);
 
 
     try {
@@ -123,7 +123,8 @@ exports.getNutritionByUserId = async (req, res) => {
                 message: "User ID is required"
             });
         }
-        const nutritionList = await nutrition.find({ _id: id }).populate('_id', 'name email').populate('createdBy', 'name email');
+        const nutritionList = await nutrition.find({ assignedTo: id }).populate('assignedTo', 'firstName').populate('createdBy', 'firstName email');
+        //console.log("nutritionList:", nutritionList);
 
         if (!nutritionList || nutritionList.length === 0) {
             return res.status(404).json({
@@ -215,4 +216,39 @@ exports.deleteNutritionById = async (req, res) => {
             message: "Server error"
         });
     }
-}
+};
+exports.getNutritionById = async (req, res) => {
+    const { id } = req.body;
+    console.log("nutrition id from nutrition controller:", id);
+
+    try {
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                statusCode: 400,
+                message: "Nutrition ID is required"
+            });
+        }
+        const nutritionData = await nutrition.findById(id).populate('assignedTo', 'firstName email').populate('createdBy', 'firstName email');
+        if (!nutritionData) {
+            return res.status(404).json({
+                success: false,
+                statusCode: 404,
+                message: "Nutrition not found"
+            });
+        }
+        res.status(200).json({
+            success: true,
+            statusCode: 200,
+            message: "Nutrition retrieved successfully",
+            nutrition: nutritionData
+        });
+    } catch (error) {
+        console.log("Error retrieving nutrition:", error);
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: "Server error"
+        });
+    }
+};

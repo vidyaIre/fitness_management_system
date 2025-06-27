@@ -1,4 +1,4 @@
-const workout = require('../models/workoutModel');
+const Workout = require('../models/workoutModel');
 const User = require('../models/userModel');
 
 // Create a new workout
@@ -41,8 +41,8 @@ exports.createWorkout = async (req, res) => {
 // Get all workouts
 exports.getAllWorkouts = async (req, res) => {
     try {
-        const workouts = await workout.find({ isActive: true, isDeleted: false }).populate('user', 'firstName');
-        //console.log("workout is:", workouts);
+        const workouts = await Workout.find({ isActive: true, isDeleted: false }).populate('user', 'firstName');
+        console.log("workout is:", workouts);
         res.status(200).json({
             success: true,
             statusCode: 200,
@@ -59,13 +59,15 @@ exports.getAllWorkouts = async (req, res) => {
         });
     }
 };
-// Get a single workout by ID
 exports.getWorkoutById = async (req, res) => {
-    const { id } = req.body;
-    console.log("id:", id);
+    const { id } = req.params; // Assuming the ID is passed as a URL parameter
+    console.log("id from  workout controller:", id);
 
     try {
-        const workoutData = await workout.findById(id).populate('user', 'name email');
+        const workoutData = await Workout.findById(id).populate('user', 'firstName');
+      
+        console.log("workoutData is:", workoutData);
+       
 
         if (!workoutData) {
             return res.status(404).json({
@@ -162,4 +164,36 @@ exports.deleteWorkout = async (req, res) => {
             message: "Server error"
         });
     }
-}
+};
+exports.getAllWorkoutsByUserId = async (req, res) => {
+    const { id } = req.params; // Assuming the user ID is passed as a URL parameter
+    console.log("userId from workout controller:", id);
+
+    try {
+        const workouts = await Workout.find({ user: id, isActive: true, isDeleted: false }).populate('user', 'firstName');
+        //console.log("workouts for user:", workouts);
+
+        if (!workouts || workouts.length === 0) {
+            return res.status(404).json({
+                success: false,
+                statusCode: 404,
+                message: "No workouts found for this user"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            statusCode: 200,
+            count: workouts.length,
+            message: "Workouts fetched successfully",
+            workouts
+        });
+    } catch (error) {
+        console.error("Error fetching workouts by user ID:", error);
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: "Server error"
+        });
+    }
+};

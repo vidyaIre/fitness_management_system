@@ -24,6 +24,8 @@ import UserOnly from '../Pages/UserOnly';
 import TrainerOnly from '../Pages/TrainerOnly';
 import AdminOnly from '../Pages/AdminOnly';
 import Admin from '../Pages/Admin';
+import UserDash from '../Pages/UserDash';
+import WorkoutUser from '../Pages/WorkoutUser';
 
 const isAuth = () => {
     const token = localStorage.getItem('@token');
@@ -137,6 +139,14 @@ const userRoutes = createBrowserRouter([
     {
         path: "/Pages/EditUser/:id",
         element: <ProtecterRoute element={<EditUser />} />
+    },
+    {
+        path: "/Pages/UserDash",
+        element: <ProtecterRoleRoute element={<UserDash />} allowedRole={['user']}/>
+    },
+    {
+        path:"/Pages/WorkoutUser",
+        element: <ProtecterRoute element={<WorkoutUser />}  allowedRole={['user']} />
     },
 {
     path: "*",

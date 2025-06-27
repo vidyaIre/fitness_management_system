@@ -73,15 +73,18 @@ const Navbar = () => {
               <ul className="dropdown-menu">
                 {userRole === 'user' && (
                   <li>
-                    <a className="dropdown-item" href="/Pages/DashboardUser">User</a>
+                    {/* <a className="dropdown-item" href="/Pages/DashboardUser">User</a> */}
+                    <a className='dropdown-item' href="/Pages/UserDash">User</a>
                   </li>)}
                   {userRole === 'trainer' && (
                 <li>
-                  <a className="dropdown-item" href="/Pages/DashboardTrainer">Trainer</a>
+                  {/* <a className="dropdown-item" href="/Pages/DashboardTrainer">Trainer</a> */}
+                  <a className='dropdown-item' href="/Pages/TrainerOnly">Trainer </a>
                 </li>)}
                 {userRole === 'admin' && (
                 <li>
-                  <a className="dropdown-item" href="/Pages/DashboardAdmin">Admin</a>
+                  {/* <a className="dropdown-item" href="/Pages/DashboardAdmin">Admin</a> */}
+                   <a className="dropdown-item" href="/Pages/AdminOnly">Admin</a>
                 </li>)}
               </ul>
             </li>
@@ -97,13 +100,16 @@ const Navbar = () => {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="/Pages/CreateWorkout">Create Workout</a>
+                  {/* <a className="dropdown-item" href="/Pages/CreateWorkout">Create Workout</a> */}
+                  <a className="dropdown-item" href="/Pages/Workouts">Workout</a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/Pages/createSession">Create Session</a>
+                  {/* <a className="dropdown-item" href="/Pages/createSession">Create Session</a> */}
+                <a className="dropdown-item" href="/Pages/Sessions">Session</a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/Pages/CreateNutrition">Create Nutrition</a>
+                  {/* <a className="dropdown-item" href="/Pages/CreateNutrition">Create Nutrition</a> */}
+                  <a className="dropdown-item" href="/Pages/Nutrition">Nutrition</a>
                 </li>
               </ul>
             </li>

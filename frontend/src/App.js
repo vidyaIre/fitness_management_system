@@ -12,7 +12,16 @@ import Footer from "./layouts/Footer";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe("process.env.REACT_APP_STRIPE_PUBLISHED_KEY");
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHED_KEY);
+const appearance = {
+  theme: 'stripe',
+  variables: {
+    fontFamily: 'Arial, sans-serif',
+    fontSize: '16px',
+    borderRadius: '4px',
+    spacingUnit: '4px'
+  }
+};
 
 
 
@@ -37,7 +46,7 @@ function App() {
         theme="dark"
         transition={Zoom} />
          
-        <ChatBox />
+        {/* <ChatBox /> */}
        
       
         <Footer/>

@@ -35,7 +35,7 @@ exports.createPayment = async (req, res) => {
         return res.status(200).json({
             statusCode: 200,
             success: true,
-            clientSecret: payment.client_secret,
+            clientSecret: paymentIntent.client_secret,
             paymentId: payment.id,
             message: 'Payment created successfully',
         });
@@ -59,62 +59,47 @@ exports.recordPayment = async (req, res) => {
             paymentIntentId
         } = req.body;
 
-        console.log("Incoming request body:", req.body);
+        //console.log("Incoming request body:", req.body);
 
         if (!userId || !amount || !paymentIntentId) {
-            return res.status(400).json({ 
-            statusCode: 400,
-            success: false,
-            message: 'Missing required fields',
-            
-         });
-        }
-        const existingPayment = await Payment.findOne({ transactionId: paymentIntentId });
-        if (existingPayment) {
-            if (existingPayment.paymentStatus === 'completed') {
-                return res.status(400).json({
-                    statusCode: 400,
-                    success: false,
-                    message: 'Payment already recorded',
-                    payment: existingPayment
-                });
-            }
-            existingPayment.paymentStatus = 'completed';
-            const updatedPayment = await existingPayment.save();
-            console.log("Payment updated successfully:", updatedPayment);
-            return res.status(200).json({
-                statusCode: 200,
-                success: true,
-                message: 'Payment updated successfully',
-                payment: updatedPayment
+            return res.status(400).json({
+                statusCode: 400,
+                success: false,
+                message: 'Missing required fields',
+
             });
         }
-        const newPayment = new Payment({
-            user: userId,
-            amount,
-            paymentMethod: 'stripe',
-            transactionId: paymentIntentId,
-            paymentStatus: 'completed'
-        });
-
-        const savedPayment = await newPayment.save();
-        console.log("Payment saved successfully:", savedPayment);
-
-        res.status(201).json({
-            statusCode: 201,
+        const existingPayment = await Payment.findOne({ transactionId: paymentIntentId });
+        if(!existingPayment) {
+            return res.status(404).json({
+                statusCode: 404,
+                success: false,
+                message: 'Payment not found',
+            });
+        }
+        if(existingPayment.paymentStatus !== 'completed'){
+            existingPayment.paymentStatus = 'completed';
+            await existingPayment.save();
+        }
+        await User.findByIdAndUpdate(userId, {
+           $set: {paymentStatus: 'paid'}});
+           console.log("User payment status updated successfully", existingPayment);
+        return res.status(200).json({
+            statusCode: 200,
             success: true,
-            message: 'Payment recorded successfully',
-            payment: savedPayment
+            message: 'Payment recorded successfully and user updated also',
+            paymentId: existingPayment.id
         });
-    } catch (err) {
-        console.error('Error recording payment:', err);
-        res.status(500).json({
+      
+    } catch (error) {
+        console.error('Record Payment Error:', error);
+        return res.status(500).json({
             statusCode: 500,
             success: false,
-            error: 'Failed to record payment',
-            details: err.message
+            message: 'Internal Server Error',
+            error: error.message
         });
     }
-
 };
+
 

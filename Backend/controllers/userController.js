@@ -215,10 +215,10 @@ exports.getUserAll = async (req, res) => {
 // Get a single user by ID
 exports.getUserById = async (req, res) => {
     const { id } = req.params;
-    console.log("id is:", id);
+    //console.log("id is:", id);
     try {
         const user = await User.findById(id);
-        console.log("Found user : ", user);
+        //console.log("Found user : ", user);
         if (!user) {
             return res.status(404).json({
                 success: false,

@@ -1,13 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { getUserById } from '../apiUtils/userApi';
 import { toast } from 'react-toastify';
 import UserCard from '../components/UserCard';
 import axios from 'axios';
 import CheckoutForm from '../components/CheckoutForm';
+import { createPayment, recordPayment } from '../apiUtils/paymentApi';
 
 const UserOnly = () => {
   const [userData, setUserData] = useState(null);
+  const [showPayForm, setShowPayForm] = useState(false);
+  const [paymentDone, setPaymentDone] = useState(false);
 
+  const membershipAmount = {
+    basic : 880,
+    premium : 1120,
+    pro : 1600
+  };
+  const userMembership = userData?.memberShip?.toLowerCase();
+  const amount = membershipAmount[userMembership]?? membershipAmount.basic;
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -31,13 +41,24 @@ const UserOnly = () => {
         toast.error("Failed to load user data.");
         console.error("Error fetching user data:", error);
       }
-    }
-
+    };
     fetchUser();
-  }, [])
+  }, []);
 
-  
-  
+
+  useEffect(() => {
+    if (userData) {
+      const status = userData.paymentStatus?.toLowerCase() === 'paid';
+      setPaymentDone(status);
+    }
+  }, [userData]);
+
+  const handlePaymentSuccess = () => {
+    setPaymentDone(true);
+    setShowPayForm(false);
+  };
+
+
 
   if (!userData) return <div className="text-center mt-5 text-muted">Loading user data...</div>;
 
@@ -68,16 +89,31 @@ const UserOnly = () => {
           <div className="col-6 mb-2"><strong>Goal:</strong><br />{userData.goal || 'N/A'}</div>
           <div className="col-6 mb-2"><strong>Membership:</strong><br />{userData.memberShip || 'N/A'}</div>
           <div className="col-6 mb-2"><strong>Payment:</strong><br />
-            {userData.paymentStatus === 'unpaid' ? (
-              <button className="btn btn-primary" onClick={CheckoutForm}>
-                Pay Now
-              </button>
-            ) : (
-              <span className="badge bg-success">Paid</span>
-            )}
-            {/* <span className={`badge bg-${userData.paymentStatus === 'Paid' ? 'success' : 'secondary'}`}>
-              {userData.paymentStatus || 'N/A'}
-            </span> */}
+
+            {
+              paymentDone ? (
+                <span className="badge bg-success">Payment Completed</span>
+              ) : showPayForm ? (
+                <CheckoutForm userId={userData._id} amount={amount} onSuccess={handlePaymentSuccess} />
+              ) : (
+                <button className="btn btn-primary" onClick={() => setShowPayForm(true)}>Pay Now</button>
+              )
+            }
+
+
+            {/* {
+                userData.paymentStatus === 'unpaid' ? (
+                  <>
+                    <button onClick={() => setShowPayForm(true)}>Pay Now</button>
+                    {showPayForm && (
+                      <CheckoutForm userId={userData._id} amount={880} />
+                    )}
+                  </>
+                ) : (
+                  <span className="badge bg-success">Paid</span>
+                )
+              } */}
+
           </div>
           <div className="col-6 mb-2"><strong>Joined:</strong><br />{new Date(userData.createdAt).toLocaleDateString()}</div>
         </div>

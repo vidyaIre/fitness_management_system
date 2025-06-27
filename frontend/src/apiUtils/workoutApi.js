@@ -46,3 +46,49 @@ export const createWorkout = async (payload) => {
     return result?.data;
 
 }
+export const getWorkoutById = async (id) => {
+    console.log("workout Api id is:", id);
+    try {
+        let token = localStorage.getItem("@token");
+        if (token) {
+            token = token.slice(1, -1);
+            console.log("token from getworkoutById is:", token);
+        } else {
+            console.log("No token found in local storage.");
+            throw new Error("No token found in local storage.");
+        }
+        const result = await axiosInstance.get(`/workout/getWorkoutById/${id}`, {
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            } });
+        console.log("Fetched workout by ID:", result);
+        return result?.data;
+    } catch (error) {
+        console.error("Error fetching workout by ID:", error);
+        throw error;
+    }
+}
+export const getAllWorkoutsByUserId = async (id) => {
+    console.log("User ID for fetching workouts:", id);
+    try {
+        let token = localStorage.getItem("@token");
+        if (token) {
+            token = token.slice(1, -1);
+            console.log("token from getAllWorkoutsByUserId is:", token);
+        } else {
+            console.log("No token found in local storage.");
+            throw new Error("No token found in local storage.");
+        }
+        const result = await axiosInstance.get(`/workout/getAllWorkoutsByUserId/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log("Fetched workouts by user ID:", result);
+        return result?.data;
+    } catch (error) {
+        console.error("Error fetching workouts by user ID:", error);
+        throw error;
+    }
+}

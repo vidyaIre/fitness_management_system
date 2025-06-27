@@ -46,3 +46,26 @@ export const createNutrition = async (payload) => {
     return result?.data;
 
 }
+export const getNutritionByUserId = async (id) => {
+    console.log("User ID in getNutritionByUserId is:", id);
+    try {
+        let token = localStorage.getItem("@token");
+        if (token) {
+            token = token.slice(1, -1);
+            console.log("Token from getNutritionByUserId is:", token);
+        } else {
+            console.log("No token found in local storage.");
+            throw new Error("No token found in local storage.");
+        }
+        const result = await axiosInstance.get(`/nutrition/getNutritionByUserId/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log("Result from getNutritionByUserId:", result);
+        return result?.data;
+    } catch (error) {
+        console.error("Error fetching nutrition by user ID:", error);
+        throw error;
+    }
+}

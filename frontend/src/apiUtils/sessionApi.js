@@ -44,3 +44,27 @@ export const  createSession = async (payload) => {
     console.log("result is:", result);
     return result?.data;
 }
+export const getAllSessionsByUserId = async (id) => {
+    console.log( "inside getAllSessionsByUserId, user id is:", id);
+    try {
+        let token = localStorage.getItem("@token");
+        //console.log("stored token is:", token);
+        if (token) {
+            token = token.slice(1, -1);
+            // console.log("token from getAllSessionsByUserId:", token);
+        } else {
+            console.log("No token found in local storage.");
+            throw new Error("No token found in local storage.");
+        }
+        const response = await axiosInstance.get(`/session/getAllSessionsByUserId/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log("Fetched sessions by user ID:", response);
+        return response?.data;
+    } catch (error) {
+        console.error("Error fetching sessions by user ID:", error);
+        throw error;
+    }
+};

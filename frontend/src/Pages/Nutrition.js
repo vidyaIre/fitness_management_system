@@ -5,7 +5,9 @@ import { toast } from 'react-toastify';
 const Nutrition = () => {
   const [nutritionName, setNutritionName] = useState([]);
   async function fetchNutrition() {
+    
     try {
+      
       const nutritionData = await getAllNutrition();
       console.log("nutrition data is:", nutritionData);
       const token = localStorage.getItem("@token");
