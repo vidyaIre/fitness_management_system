@@ -26,6 +26,8 @@ import AdminOnly from '../Pages/AdminOnly';
 import Admin from '../Pages/Admin';
 import UserDash from '../Pages/UserDash';
 import WorkoutUser from '../Pages/WorkoutUser';
+import SessionUser from '../Pages/SessionUser';
+import NutritionUser from '../Pages/NutritionUser';
 
 const isAuth = () => {
     const token = localStorage.getItem('@token');
@@ -38,7 +40,7 @@ const ProtecterRoute = ({ element }) => {
     return isAuth() ? element : <Navigate to="/Pages/Home" />;
 };
 const ProtecterRoleRoute = ({ element, allowedRole }) => {
-const user = isAuth();
+    const user = isAuth();
 
     if (!user) {
         return <Navigate to="/Pages/Home" />;
@@ -63,20 +65,20 @@ const userRoutes = createBrowserRouter([
         element: <Register />
     },
     {
-        path:"/Pages/MembershipPlans",
-        element:<MembershipPlans/>
+        path: "/Pages/MembershipPlans",
+        element: <MembershipPlans />
     },
     {
-        path:"/Pages/Payments",
-        element:<Payments/>
+        path: "/Pages/Payments",
+        element: <Payments />
     },
     {
         path: "/Pages/Users",
-        element: <ProtecterRoute element={<Users />}  />
+        element: <ProtecterRoute element={<Users />} />
     },
     {
-      path: "/Pages/UserOnly",
-        element: <ProtecterRoute element={<UserOnly />} />  
+        path: "/Pages/UserOnly",
+        element: <ProtecterRoute element={<UserOnly />} />
     },
     {
         path: "/Pages/TrainerOnly",
@@ -124,14 +126,14 @@ const userRoutes = createBrowserRouter([
     },
     {
         path: "/Pages/DashboardUser",
-        element: <ProtecterRoleRoute element={<DashboardUser />}allowedRole={['user']} />
+        element: <ProtecterRoleRoute element={<DashboardUser />} allowedRole={['user']} />
     },
-    
+
     {
         path: "/Pages/DashboardAdmin",
-        element: <ProtecterRoleRoute element={<DashboardAdmin />} allowedRole={['admin']}/>
+        element: <ProtecterRoleRoute element={<DashboardAdmin />} allowedRole={['admin']} />
     },
-   
+
     {
         path: "/Pages/ViewUser/:id",
         element: <ProtecterRoute element={<ViewUser />} />
@@ -142,16 +144,24 @@ const userRoutes = createBrowserRouter([
     },
     {
         path: "/Pages/UserDash",
-        element: <ProtecterRoleRoute element={<UserDash />} allowedRole={['user']}/>
+        element: <ProtecterRoleRoute element={<UserDash />} allowedRole={['user']} />
     },
     {
-        path:"/Pages/WorkoutUser",
-        element: <ProtecterRoute element={<WorkoutUser />}  allowedRole={['user']} />
+        path: "/Pages/WorkoutUser",
+        element: <ProtecterRoute element={<WorkoutUser />} allowedRole={['user']} />
     },
-{
-    path: "*",
+    {
+        path: "/Pages/SessionUser",
+        element: <ProtecterRoute element={<SessionUser />} allowedRole={['user']} />
+    },
+    {
+        path: "/Pages/NutritionUser",
+        element: <ProtecterRoute element={<NutritionUser />} allowedRole={['user']} />
+    },
+    {
+        path: "*",
         element: <NotFound />
-}
+    }
 ])
 
 

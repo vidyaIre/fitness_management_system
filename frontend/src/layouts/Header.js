@@ -101,15 +101,18 @@ const Navbar = () => {
               <ul className="dropdown-menu">
                 <li>
                   {/* <a className="dropdown-item" href="/Pages/CreateWorkout">Create Workout</a> */}
-                  <a className="dropdown-item" href="/Pages/Workouts">Workout</a>
+                  {/* <a className="dropdown-item" href="/Pages/Workouts">Workout</a> */}
+                  <a className="dropdown-item" href="/Pages/WorkoutUser">Workout</a>
                 </li>
                 <li>
                   {/* <a className="dropdown-item" href="/Pages/createSession">Create Session</a> */}
-                <a className="dropdown-item" href="/Pages/Sessions">Session</a>
+                {/* <a className="dropdown-item" href="/Pages/Sessions">Session</a> */}
+                  <a className="dropdown-item" href="/Pages/SessionUser">Session</a>
                 </li>
                 <li>
                   {/* <a className="dropdown-item" href="/Pages/CreateNutrition">Create Nutrition</a> */}
-                  <a className="dropdown-item" href="/Pages/Nutrition">Nutrition</a>
+                  {/* <a className="dropdown-item" href="/Pages/Nutrition">Nutrition</a> */}
+                  <a className="dropdown-item" href="/Pages/NutritionUser">Nutrition</a>
                 </li>
               </ul>
             </li>
